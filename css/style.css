@@ -1,0 +1,18 @@
+body {
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.ubicacionNavbar{
+    color: #6C757D;
+    padding: 5px;
+}
+
+.navbar2 {
+    justify-content: space-between !important;
+}
+
+.tituloNav {
+    font-family: 'Averia Serif Libre', serif !important;
+    color: #002603;
+    font-size: 30px;
+}
