@@ -18,10 +18,10 @@
 
 <body>
     <div class="container-fluid bg-light">
-        <div class="container d-flex justify-content-between align-items-center top-bar">
+        <div class="container d-flex justify-content-between align-items-center top-bar p-2">
         <span><i class="fas fa-map-marker-alt"></i> Cartago, Costa Rica</span>
         <div>
-                <span>Sign In / Sign Up</span>
+                <span><a href="" class="fw-bold text-dark">Sign In / Sign Up</a></span>
             </div>
         </div>
     </div>
