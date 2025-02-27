@@ -27,22 +27,23 @@
     </div>
     <nav class="navbar navbar-expand-lg bg-white shadow-sm">
     <a class="navbar-brand d-flex align-items-center" href="#">
-                <span class=" tituloNav fw-bold text-dark"> DISTRIBUIDORA EL LEGADO</span>
+                <span class=" tituloNav fw-bold"><i class="fas fa-solid fa-truck"></i> DISTRIBUIDORA EL LEGADO</span>
             </a>
-
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
     </nav>
-
-
-
-    <navbar>
-        
-    </navbar>
     <main>
         <section>
+    <div class="mainContainer container row w-100">
+        <div class="col">
+        <img src="./img/familia.png" >
+        </div>
+        <div class="col">
 
+        </div>
+        
+    </div>
         </section>
     </main>
 </body>
