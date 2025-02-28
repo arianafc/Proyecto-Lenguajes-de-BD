@@ -1,5 +1,6 @@
 body {
     font-family: 'Poppins', sans-serif !important;
+    padding: 0px;
 }
 
 .ubicacionNavbar{
@@ -14,5 +15,31 @@ body {
 .tituloNav {
     font-family: 'Averia Serif Libre', serif !important;
     color: #002603;
-    font-size: 25px;
+    font-size: 30px;
+}
+
+.tituloHP {
+    font-family: 'Averia Serif Libre', serif !important;
+    color: #002603;
+    font-size: 50px;
+
+}
+.imagenHP {
+   width: 100%;
+}
+
+.textoHP {
+    justify-content: baseline !important;
+    align-items: center;
+}
+
+.productosHP {
+    font-family: 'Averia Serif Libre', serif !important;
+    color: #5F4142;
+    
+
+}
+
+.opciones{
+    background-color: #002603; 
 }
