@@ -1,4 +1,9 @@
 /* Topbar */
+
+body{
+    font-family: 'Poppins', sans-serif !important;
+}
+
 .topbar {
     display: flex;
     justify-content: space-between;
@@ -74,9 +79,9 @@
 }
 
 .logo-text {
-    font-size: 20px;
-    font-weight: bold;
-    color: #000;
+    font-size: 25px;
+    color: #002603;
+    font-family: 'Averia Serif Libre', serif !important;
 }
 
 .navbar-right {

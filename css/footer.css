@@ -50,16 +50,19 @@
 .company-name {
     text-align: center;
     flex-grow: 1;
+    font-family: 'Averia Serif Libre', serif !important;
 }
 
 .company-name h2 {
     font-size: 24px;
+    font-family: 'Averia Serif Libre', serif !important;
     margin-bottom: 5px;
 }
 
 .company-name h1 {
     font-size: 32px;
     margin-top: 0;
+    font-family: 'Averia Serif Libre', serif !important;
 }
 
 .footer-bottom {

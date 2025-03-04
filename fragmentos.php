@@ -6,6 +6,8 @@ function incluir_css() {
     echo '<link rel="stylesheet" href="css/style.css">';
     echo '<link rel="stylesheet" href="css/navbar.css">';
     echo '<link rel="stylesheet" href="css/footer.css">';
+    echo '<link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre&display=swap" rel="stylesheet">';
+    echo '<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">';
 }
 
 /**
@@ -19,18 +21,9 @@ function incluir_navbar() {
             <span class="location-icon">📍</span>
             <span>Cartago, Costa Rica</span>
         </div>
-        
-        <div class="topbar-right">
-            <div class="language-selector">
-                Eng <span class="dropdown-arrow">▾</span>
-            </div>
             
-            <div class="currency-selector">
-                USD <span class="dropdown-arrow">▾</span>
-            </div>
-            
-            <div class="auth-links">
-                Sign In / Sign Up
+            <div class="auth-links"><a href="login.php">  Sign In / Sign Up</a>
+              
             </div>
         </div>
     </div>
@@ -38,7 +31,7 @@ function incluir_navbar() {
     <!-- Main Navbar -->
     <div class="navbar">
         <div class="logo-container">
-            <span class="logo-icon">🌱</span>
+            <span class="logo-icon">🚚🍞            </span>
             <span class="logo-text">DISTRIBUIDORA EL LEGADO</span>
         </div>
         
@@ -65,7 +58,7 @@ function incluir_navbar() {
         
         <div class="phone-number">
             <span class="phone-icon">📞</span>
-            <span>(219) 555-0114</span>
+            <span>(+506) 87858978</span>
         </div>
         
         <div class="mobile-menu-toggle" id="mobile-menu-toggle">☰</div>
