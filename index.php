@@ -35,7 +35,7 @@
     </nav>
     <main>
         <section>
-    <div class="mainContainer container row w-100">
+    <div class="mainContainer container row w-100 d-flex">
         <div class="col">
         <img src="./img/familia.png" >
         </div>
