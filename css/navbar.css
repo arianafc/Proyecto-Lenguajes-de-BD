@@ -1,0 +1,176 @@
+/* Topbar */
+
+body{
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+    border-bottom: 1px solid #00211A;
+}
+
+.location {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #666;
+    font-size: 14px;
+}
+
+.location-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.language-selector, .currency-selector {
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    margin-left: 5px;
+}
+
+.auth-links {
+    font-size: 14px;
+    color: #666;
+}
+
+.auth-links a {
+    color: #666;
+    text-decoration: none;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+/* Main Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    color: var(--light-green);
+    font-size: 24px;
+}
+
+.logo-text {
+    font-size: 25px;
+    color: #002603;
+    font-family: 'Averia Serif Libre', serif !important;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.wishlist-icon, .cart-icon {
+    font-size: 24px;
+    color: #002603;
+    cursor: pointer;
+}
+
+.cart-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--light-green);
+    color: white;
+    font-size: 12px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cart-total {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Main Menu */
+.main-menu {
+    background-color: #00211A;
+    padding: 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-items {
+    display: flex;
+    list-style-type: none;
+}
+
+.menu-items li {
+    position: relative;
+}
+
+.menu-items li a {
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 15px 20px;
+    display: block;
+    font-size: 15px;
+}
+
+.menu-items li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-indicator {
+    margin-left: 5px;
+}
+
+.phone-number {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #FFFFFF;
+}
+
+.phone-icon {
+    font-size: 18px;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    color: var(--text-color);
+    font-size: 24px;
+    cursor: pointer;
+}

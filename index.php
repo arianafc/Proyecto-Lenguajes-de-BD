@@ -43,9 +43,11 @@
     </div>
     <main>
         <section>
+
     <div class="mainContainer container-fluid row ">
         <div class="col p-0 ">
         <img class="object-fit-lg-contain border rounded imagenHP" src="./img/familia.png" >
+
         </div>
         <div class="col align-self-center p-5">
              <h4>LLEVANDO DELICIAS A TU NEGOCIO DESDE 2023</h4>
