@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<?php
+// Incluir el archivo de fragmentos
+require_once 'fragmentos.php';
+?>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,38 +14,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./css/style.css">
-
+   
+    <?php incluir_css(); ?>
     <link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
-    <div class="container-fluid bg-light">
-        <div class="container d-flex justify-content-between align-items-center top-bar p-2">
-        <span><i class="fas fa-map-marker-alt"></i> Cartago, Costa Rica</span>
-        <div>
-                <span><a href="" class="fw-bold text-dark">Iniciar Sesión</a></span>
-            </div>
-        </div>
-    </div>
-    <nav class="navbar navbar-expand-lg bg-white shadow-sm">
-    <a class="navbar-brand d-flex align-items-center" href="index.php">
-                <span class=" tituloNav fw-bold"><i class="fas fa-solid fa-truck"></i> DISTRIBUIDORA EL LEGADO</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-    
-    </nav>
-    <div class="opciones container-fluid p-3">
-    <span ><a href="" class="text-white m-5">Home</a></span>
-        <span ><a href="" class="text-white m-5">Productos</a></span>
-        <span ><a href="" class="text-white m-5">Contáctanos</a></span>
-        <span ><a href=""  class="text-white m-5">Nosotros</a></span>
-        <span ><a href="" class="text-white m-5">Cotizaciones</a></span>
-    </div>
+<?php incluir_navbar(); ?>
     <main>
         <section>
 
@@ -59,8 +41,49 @@
     </div>
     <hr>
     <h1 class="productosHP text-center">NUESTROS PRODUCTOS</h3>
+    <section class="products-section">
+        <div class="container">
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">🍔</div>
+                    <h3 class="product-title">Hamburguesa Premium</h3>
+                    <p class="product-description">La mejor calidad para su restaurante</p>
+                    <p class="product-price">$15.99</p>
+                    <button class="btn">Añadir al carrito</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🍰</div>
+                    <h3 class="product-title">Postre de Chocolate</h3>
+                    <p class="product-description">Delicioso postre para complementar su menú</p>
+                    <p class="product-price">$8.50</p>
+                    <button class="btn">Añadir al carrito</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🥪</div>
+                    <h3 class="product-title">Sandwich de Pollo</h3>
+                    <p class="product-description">Ideal para comidas rápidas</p>
+                    <p class="product-price">$12.75</p>
+                    <button class="btn">Añadir al carrito</button>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🥗</div>
+                    <h3 class="product-title">Hamburguesa Vegetariana</h3>
+                    <p class="product-description">Opción saludable para su menú</p>
+                    <p class="product-price">$14.25</p>
+                    <button class="btn">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+    </section>
         </section>
     </main>
+
+   
+
+    <?php incluir_footer(); ?>
 </body>
 
 </html>

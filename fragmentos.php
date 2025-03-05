@@ -6,6 +6,7 @@ function incluir_css() {
     echo '<link rel="stylesheet" href="css/style.css">';
     echo '<link rel="stylesheet" href="css/navbar.css">';
     echo '<link rel="stylesheet" href="css/footer.css">';
+    echo '<link rel="stylesheet" href="css/index1.css">';
     echo '<link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre&display=swap" rel="stylesheet">';
     echo '<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">';
 }
