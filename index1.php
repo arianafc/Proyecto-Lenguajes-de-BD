@@ -65,7 +65,9 @@ require_once 'fragmentos.php';
             </div>
         </div>
     </section>
-    
+
+    <hr>
+    <br>
     <!-- Incluir el footer -->
     <?php incluir_footer(); ?>
 </body>
