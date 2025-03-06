@@ -1,0 +1,78 @@
+body {
+    font-family: 'Poppins', sans-serif !important;
+    padding: 0px;
+}
+
+.ubicacionNavbar{
+    color: #6C757D;
+    padding: 5px;
+}
+
+.navbar2 {
+    justify-content: space-between !important;
+}
+
+.tituloNav {
+    font-family: 'Averia Serif Libre', serif !important;
+    color: #002603;
+    font-size: 30px;
+}
+
+.tituloHP {
+    font-family: 'Averia Serif Libre', serif !important;
+    color: #002603;
+    font-size: 50px;
+
+}
+.imagenHP {
+   width: 100%;
+}
+
+.textoHP {
+    justify-content: baseline !important;
+    align-items: center;
+}
+
+.productosHP {
+    font-family: 'Averia Serif Libre', serif !important;
+    color: #5F4142;
+    
+
+}
+
+.opciones{
+    background-color: #002603; 
+}
+
+.bottom-section {
+    position: relative;
+    width: 100%; /* La sección cubre el 100% del ancho de la página */
+    height: 50vh; /* La sección tiene una altura del 50% de la pantalla */
+}
+
+.left-image {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.left-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* La imagen se ajusta completamente al contenedor */
+}
+
+.text-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white; /* Cambia el color del texto según sea necesario */
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente para el texto */
+    padding: 10px;
+    box-sizing: border-box;
+}

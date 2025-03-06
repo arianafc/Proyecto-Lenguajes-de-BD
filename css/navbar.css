@@ -10,13 +10,14 @@ body{
     align-items: center;
     padding: 10px 40px;
     border-bottom: 1px solid #00211A;
+    background-color: #f3f3f3 !important;
 }
 
 .location {
     display: flex;
     align-items: center;
     gap: 5px;
-    color: #666;
+    color: #313131;
     font-size: 14px;
 }
 
@@ -135,6 +136,7 @@ body{
 .menu-items {
     display: flex;
     list-style-type: none;
+
 }
 
 .menu-items li {

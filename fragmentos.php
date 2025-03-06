@@ -3,7 +3,7 @@
  * Función para incluir los archivos CSS principales
  */
 function incluir_css() {
-    echo '<link rel="stylesheet" href="css/style.css">';
+    echo '<link rel="stylesheet" href="css/index.css">';
     echo '<link rel="stylesheet" href="css/navbar.css">';
     echo '<link rel="stylesheet" href="css/footer.css">';
     echo '<link rel="stylesheet" href="css/index1.css">';
@@ -32,7 +32,7 @@ function incluir_navbar() {
     <!-- Main Navbar -->
     <div class="navbar">
         <div class="logo-container">
-            <span class="logo-icon">🚚🍞            </span>
+            <span class="logo-icon">   </span>
             <span class="logo-text">DISTRIBUIDORA EL LEGADO</span>
         </div>
         
