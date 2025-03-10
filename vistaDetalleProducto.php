@@ -18,35 +18,44 @@ require_once 'fragmentos.php';
     <link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <?php incluir_css(); ?>
+    <?php incluir_css(); ?>
 </head>
 
 <body>
-<?php incluir_navbar(); ?>
+    <?php incluir_navbar(); ?>
     <main>
- <section>
-    
-    <hr>
-    <h1 class="productosHP text-center">NUESTROS PRODUCTOS</h3>
-    <section class="products-section">
-        <div class="container">
-            <div class="products-grid">
-                <div class="product-card">
+        <section>
+        <br>
+        <div class="mainContainer container-fluid row ">
+                <div class="col ">
+              
+                    <img class="object-fit-lg-contain border rounded imagenHP p-5" src="./img/familia.png">
+
+                </div>
+                <div class="col align-self-center p-5">
+                <h2 class="text-center textos">Title Producto</h2>
+                <p class="text-center"><b>$$</b></p>
+                <br>
+                    <h5>DESCRIPCION DEL PROUCTO</h5>
                 
-                <div class="product-card">
-                    <div class="product-image">🥗</div>
-                    <h3 class="product-title">Hamburguesa Vegetariana</h3>
-                    <p class="product-description">Opción saludable para su menú</p>
-                    <p class="product-price">$14.25</p>
-                    <button class="btn bg-light"><a href="vistaDetalleProducto.php">Añadir al carrito</a></button>
+                   
+                    <hr>
+                    <br>
+                    <div class="mb-4">
+                <label for="quantity" class="form-label">Cantidad</label>
+                <input type="number" class="form-control" id="quantity" value="1" min="1" style="width: 80px;">
+            </div>
+                    <br>
+                    <button class="btn bg-light" id="btnAgregarCarrito"><a href="" class="fw-bold text-dark">🛒 Agregar al Carrito</a></button>
                 </div>
             </div>
-        </div>
-    </section>
- </section>
- <br>
-<hr>
 
+
+
+
+
+            <hr>
+        </section>
 
     </main>
 

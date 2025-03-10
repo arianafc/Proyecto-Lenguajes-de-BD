@@ -7,6 +7,7 @@ function incluir_css() {
     echo '<link rel="stylesheet" href="css/navbar.css">';
     echo '<link rel="stylesheet" href="css/footer.css">';
     echo '<link rel="stylesheet" href="css/index1.css">';
+    echo '<link rel="stylesheet" href="css/detalleProducto.css">';
     echo '<link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre&display=swap" rel="stylesheet">';
     echo '<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">';
 }
@@ -51,7 +52,7 @@ function incluir_navbar() {
     <div class="main-menu">
         <ul class="menu-items">
             <li><a href="index.php">Home <span class="dropdown-indicator">▾</span></a></li>
-            <li><a href="templates/productos.php">Productos <span class="dropdown-indicator">▾</span></a></li>
+            <li><a href="productos.php">Productos <span class="dropdown-indicator">▾</span></a></li>
             <li><a href="contactanos.php">Contáctanos</a></li>
             <li><a href="nosotros.php">Nosotros</a></li>
             <li><a href="cotizaciones.php">Cotizaciones</a></li>
