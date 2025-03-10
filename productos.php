@@ -38,7 +38,7 @@ require_once 'fragmentos.php';
                     <h3 class="product-title">Hamburguesa Vegetariana</h3>
                     <p class="product-description">Opción saludable para su menú</p>
                     <p class="product-price">$14.25</p>
-                    <button class="btn bg-light"><a href="vistaDetalleProducto.php">Añadir al carrito</a></button>
+                    <button class="btn bg-light"><a href="vistaDetalleProducto.php">Ver producto</a></button>
                 </div>
             </div>
         </div>
