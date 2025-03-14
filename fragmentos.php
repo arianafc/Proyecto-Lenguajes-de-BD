@@ -7,6 +7,7 @@ function incluir_css() {
     echo '<link rel="stylesheet" href="css/navbar.css">';
     echo '<link rel="stylesheet" href="css/footer.css">';
     echo '<link rel="stylesheet" href="css/index1.css">';
+    echo '<link rel="stylesheet" href="css/dashboard.css">';
     echo '<link rel="stylesheet" href="css/detalleProducto.css">';
     echo '<link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre&display=swap" rel="stylesheet">';
     echo '<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">';
@@ -68,6 +69,8 @@ function incluir_navbar() {
     <?php
 }
 
+
+
 /**
  * Función para incluir el footer
  */
@@ -119,5 +122,60 @@ function incluir_footer() {
         </div>
     </footer>
     <?php
+}
+
+
+
+
+function sidebar(){
+    ?>
+    <div class="sidebar2">
+        <div class="logoSidebar">
+            <img src="./imagenes/logo.png" alt="Logo Casa Natura">
+            
+        </div>
+        <div class="menuSidebar">
+            <p>Main Menu</p>
+            <ul>
+                <li ><i class="icon-dashboard"></i><a href="dashboardAdmin.php"> Dashboard</a></li>
+                <li><i class="icon-animals"></i><a href="gestionAnimales.php">  Gestión de Clientes</a></li>
+                <li><i class="icon-donations"></i><a href="gestionDonaciones.php"> Gestión de Pedidos</a></li>
+                <li><i class="icon-users"></i><a href="gestionUsuarios.php">  Gestión de Productos</a></li>
+                <li><i class="icon-sponsorship"></i><a href="gestionPadrinos.php"> Gestión de Consultas</a></li>
+                <li><i class="icon-tours"></i><a href="gestionTours.php"> Gestión de Inventario</a></li>
+            </ul>
+        </div>
+        <div class="generalSidebar">
+            <p>General</p>
+            <ul>
+                <li><i class="icon-settings"></i><a href="ajustesAdmin.php"> Ajustes</a></li>
+                <li><i class="icon-logout"></i><a href="login.php"> Logout</a></li>
+            </ul>
+        </div>
+    </div>';
+<?php
+}
+
+
+function footerAdmin(){
+?>
+<footer class="footerAdmin">
+        <div class="footerAdmin-title">
+            <h2 class="footerAdmin-title">
+                <div class="logo">
+                    <img class="img" src="./imagenes/logo.png">
+                    <div>
+                        <span style="color: #fff;">CASA</span>
+                    <br>
+                    <span class="highlight">NATURA</span>
+                    </div>
+                    
+                    <img class="img" src="./imagenes/footer.png">
+                </div>
+            </h2>
+        </div>
+
+<?php
+
 }
 ?>
