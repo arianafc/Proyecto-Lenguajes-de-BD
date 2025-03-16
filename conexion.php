@@ -15,9 +15,5 @@ $conn = oci_connect($db_user, $db_password, $connection_string);
 if (!$conn) {
     $error = oci_error();
     die("Error al conectar a Oracle: " . $error['message']);
-} else {
-    echo "Conexión exitosa a Oracle!";
-    // Cerrar la conexión
-    oci_close($conn);
-}
+} 
 ?>

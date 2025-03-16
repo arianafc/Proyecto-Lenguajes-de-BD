@@ -1,0 +1,131 @@
+body{
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Poppins', sans-serif !important;
+    }
+    .sidebar {
+        height: 100vh;
+        background-color: #00211A;
+        color: white;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .tituloAdmin{
+        font-family: 'Averia Serif Libre', serif !important;
+        padding: 5px;
+        color: #f8f9fa
+     
+    }
+    
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        padding: 10px;
+        display: block;
+    }
+    .sidebar a:hover {
+        color: #9c8888;
+        font-weight: 700;
+        border-radius: 10px;
+    }
+    .content {
+        margin-left: 250px;
+        transition: margin-left 0.3s ease-in-out;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+        }
+        .sidebar.show {
+            transform: translateX(0);
+        }
+        .content {
+            margin-left: 0;
+        }
+        .content.shift {
+            margin-left: 250px;
+        }
+    }
+    
+    .btn-toggle{
+        background-color: #00211A;
+        color: #f8f9fa;
+    }
+}
+
+
+.cardVerde {
+    background-color: #00211A;
+    border: 0;
+}
+
+.cardCafe {
+    background-color: #5F4142;
+    border: 0;
+}
+
+.cardVerde:hover{
+    transform: scale(1.05); 
+}
+
+.cardCafe:hover{
+  
+        transform: scale(1.05); 
+    }
+
+    .profile {
+        position: relative;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    .profile img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    .dropdown {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        display: none;
+        width: 160px;
+        z-index: 1000;
+    }
+    .dropdown.active {
+        display: block;
+    }
+    .dropdown a {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        text-decoration: none;
+        color: #333;
+    }
+    .dropdown a:hover {
+        background: #f0f0f0;
+    }
+    .dropdown a i {
+        margin-right: 10px;
+    }
+
+    .opciones a.active {
+        color: #A18D50;
+        font-weight: 700;
+        border-radius: 5px;
+        text-transform: uppercase
+    }
+    
+    .opciones{
+        background-color: #00211A !important;
+    }
