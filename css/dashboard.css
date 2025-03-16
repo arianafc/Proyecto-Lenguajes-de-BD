@@ -1,124 +1,62 @@
-.sidebar2 {
-    z-index: 1000;
-position: fixed;
-left: 250px;
-width: 250px;
-height: 100%;
-margin-left: -250px;
-overflow-y: auto;
-    background-color: #ffffff;
-    color: #00211A !important;
-
-padding: 20px;
-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-}
-
-.logoSidebar {
-    display: flex;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-.logoSidebar img {
-    width: 100px;
-    height: 100px;
-    margin-right: 5px;
-}
-
-.logoSidebar h1 {
-    font-size: 25px;
-    font-weight: bold;
-    color: #00211A ;
-}
-
-.logoSidebar span {
-    color: #FFA500; /* Color para "NATURA" */
-}
-
-.menuSidebar, .generalSidebar {
-    margin-top: 20px;
-}
-
-.menuSidebar p, .generalSidebar p {
-    font-size: 16px;
-    font-weight: bold;
-    color:#062D3E;
-    margin-bottom: 10px;
-}
-
-.menuSidebar ul, .generalSidebar ul {
-    list-style: none;
-    padding: 0;
-}
-
-.menuSidebar li, .generalSidebar li {
-    font-size: 16px;
-    padding: 10px 0;
-    display: flex;
-    align-items: center;
-    color:#00211A;
-    cursor: pointer;
-    transition: color 0.3s ease;
+body{
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Poppins', sans-serif !important;
+    }
+    .sidebar {
+        height: 100vh;
+        background-color: #00211A;
+        color: white;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .tituloAdmin{
+        font-family: 'Averia Serif Libre', serif !important;
+        padding: 5px;
+        color: #f8f9fa
+     
+    }
+    
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        padding: 10px;
+        display: block;
+    }
+    .sidebar a:hover {
+        color: #9c8888;
+        font-weight: 700;
+        border-radius: 10px;
+    }
+    .content {
+        margin-left: 250px;
+        transition: margin-left 0.3s ease-in-out;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+        }
+        .sidebar.show {
+            transform: translateX(0);
+        }
+        .content {
+            margin-left: 0;
+        }
+        .content.shift {
+            margin-left: 250px;
+        }
+    }
+    
+    .btn-toggle{
+        background-color: #00211A;
+        color: #f8f9fa;
+    }
 }
 
 
-.menuSidebar li i, .generalSidebar li i {
-    margin-right: 10px;
-    color:#062D3E;
-    text-decoration:none;
-}
-.menuSidebar li a, .generalSidebar li a {
-   text-decoration: none;
-   color:#062D3E;
-}
-
-.menuSidebar li:hover, .generalSidebar li:hover {
-    color: #FFC107;
-}
-
-.menuSidebar li a:hover, .generalSidebar li a:hover {
-    color: #FFC107;
-}
-.menuSidebar .active {
-    background-color: #062D3E;
-    color: #fff;
-    border-radius: 8px;
-}
-
-.active a {
-    color:#fff;
-}
-
-.menuSidebar .active i {
-    color: #fff;
-}
-
-/* Iconos para el dashboard */
-.icon-dashboard::before { content: "📂"; }
-.icon-animals::before { content: "🐾"; }
-.icon-donations::before { content: "💰"; }
-.icon-sponsorship::before { content: "🤝"; }
-.icon-tours::before { content: "📅"; }
-.icon-events::before { content: "🎉"; }
-.icon-settings::before { content: "⚙️"; }
-.icon-support::before { content: "🆘"; }
-.icon-logout::before { content: "🔌"; }
-.icon-users::before { content: "🫂"; }
-
-
-.footerAdmin {
-background-color: #062D3E;
-color: white;
-padding: 40px 20px;
-position: static;
-margin-top: 40px;
-display: flex;
-justify-content: center;
-align-items: center;
-font-family: 'Paytone One', sans-serif;
-font-weight: 100;
-}
-
-
-      /* Estilos para el menú vertical con fondo gris claro */

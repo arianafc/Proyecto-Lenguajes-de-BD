@@ -2,7 +2,8 @@
 /**
  * Función para incluir los archivos CSS principales
  */
-function incluir_css() {
+function incluir_css()
+{
     echo '<link rel="stylesheet" href="css/index.css">';
     echo '<link rel="stylesheet" href="css/navbar.css">';
     echo '<link rel="stylesheet" href="css/footer.css">';
@@ -16,7 +17,8 @@ function incluir_css() {
 /**
  * Función para incluir el navbar
  */
-function incluir_navbar() {
+function incluir_navbar()
+{
     ?>
     <!-- Topbar -->
     <div class="topbar">
@@ -24,23 +26,23 @@ function incluir_navbar() {
             <span class="location-icon">📍</span>
             <span>Cartago, Costa Rica</span>
         </div>
-            
-            <div class="auth-links"><a href="login.php">  Sign In / Sign Up</a>
-              
-            </div>
+
+        <div class="auth-links"><a href="login.php"> Sign In / Sign Up</a>
+
         </div>
     </div>
-    
+    </div>
+
     <!-- Main Navbar -->
     <div class="navbar">
         <div class="logo-container">
-            <span class="logo-icon">   </span>
+            <span class="logo-icon"> </span>
             <span class="logo-text">DISTRIBUIDORA EL LEGADO</span>
         </div>
-        
+
         <div class="navbar-right">
             <div class="wishlist-icon">♡</div>
-            
+
             <div class="cart-container">
                 <div class="cart-icon">🛒</div>
                 <div class="cart-badge">3</div>
@@ -48,7 +50,7 @@ function incluir_navbar() {
             </div>
         </div>
     </div>
-    
+
     <!-- Main Menu -->
     <div class="main-menu">
         <ul class="menu-items">
@@ -58,12 +60,12 @@ function incluir_navbar() {
             <li><a href="nosotros.php">Nosotros</a></li>
             <li><a href="cotizaciones.php">Cotizaciones</a></li>
         </ul>
-        
+
         <div class="phone-number">
             <span class="phone-icon">📞</span>
             <span>(+506) 87858978</span>
         </div>
-        
+
         <div class="mobile-menu-toggle" id="mobile-menu-toggle">☰</div>
     </div>
     <?php
@@ -74,11 +76,12 @@ function incluir_navbar() {
 /**
  * Función para incluir el footer
  */
-function incluir_footer() {
+function incluir_footer()
+{
     ?>
     <footer class="footer">
         <div class="footer-divider"></div>
-        
+
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Productos</h3>
@@ -88,7 +91,7 @@ function incluir_footer() {
                     <li><a href="productos.php?categoria=sandwich">Sandwich</a></li>
                 </ul>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Nosotros</h3>
                 <ul>
@@ -97,25 +100,25 @@ function incluir_footer() {
                     <li><a href="nosotros.php?seccion=quienes-somos">¿Quiénes somos?</a></li>
                 </ul>
             </div>
-            
+
             <div class="footer-section">
                 <h3>Ayuda</h3>
                 <ul>
                     <li><a href="contactanos.php">Contáctanos</a></li>
                 </ul>
             </div>
-            
+
             <div class="company-name">
                 <h2>DISTRIBUIDORA</h2>
                 <h1>EL LEGADO</h1>
             </div>
         </div>
-        
+
         <div class="footer-bottom">
             <div class="copyright">
                 Derechos Reservados El Legado @ 2025
             </div>
-            
+
             <div class="footer-language-selector">
                 Español
             </div>
@@ -127,55 +130,53 @@ function incluir_footer() {
 
 
 
-function sidebar(){
+function sidebar()
+{
     ?>
-    <div class="sidebar2">
-        <div class="logoSidebar">
-            <img src="./imagenes/logo.png" alt="Logo Casa Natura">
-            
+    \
+    <!-- Sidebar -->
+    <nav id="sidebar" class="sidebar py-3 d-md-block">
+        <div class="sidebar-header text-center">
+            <h4 class="tituloAdmin">Distribuidora El Legado</h4>
         </div>
-        <div class="menuSidebar">
-            <p>Main Menu</p>
-            <ul>
-                <li ><i class="icon-dashboard"></i><a href="dashboardAdmin.php"> Dashboard</a></li>
-                <li><i class="icon-animals"></i><a href="gestionAnimales.php">  Gestión de Clientes</a></li>
-                <li><i class="icon-donations"></i><a href="gestionDonaciones.php"> Gestión de Pedidos</a></li>
-                <li><i class="icon-users"></i><a href="gestionUsuarios.php">  Gestión de Productos</a></li>
-                <li><i class="icon-sponsorship"></i><a href="gestionPadrinos.php"> Gestión de Consultas</a></li>
-                <li><i class="icon-tours"></i><a href="gestionTours.php"> Gestión de Inventario</a></li>
-            </ul>
-        </div>
-        <div class="generalSidebar">
-            <p>General</p>
-            <ul>
-                <li><i class="icon-settings"></i><a href="ajustesAdmin.php"> Ajustes</a></li>
-                <li><i class="icon-logout"></i><a href="login.php"> Logout</a></li>
-            </ul>
-        </div>
-    </div>';
-<?php
+
+
+        <hr>
+        <div class="opciones">   
+        <a href="dashboard.php">Dashboard</a>
+        <a href="gestionUsuarios.php">Gestión de Usuarios</a>
+        <a href="gestionPedidos.php">Gestión de Pedidos</a>
+        <a href="gestionProductos.php">Gestión de Productos</a>
+        <a href="gestionInventario.php">Gestión de Inventario</a>
+        <a href="gestionInventario.php">Gestión de Cotizaciones</a></div>
+    </nav>
+
+    <!-- Botón de menú -->
+    <button class="btn btn-toggle d-md-none m-3" id="menu-toggle">☰</button>
+    <?php
 }
 
 
-function footerAdmin(){
-?>
-<footer class="footerAdmin">
+function footerAdmin()
+{
+    ?>
+    <footer class="footerAdmin">
         <div class="footerAdmin-title">
             <h2 class="footerAdmin-title">
                 <div class="logo">
                     <img class="img" src="./imagenes/logo.png">
                     <div>
                         <span style="color: #fff;">CASA</span>
-                    <br>
-                    <span class="highlight">NATURA</span>
+                        <br>
+                        <span class="highlight">NATURA</span>
                     </div>
-                    
+
                     <img class="img" src="./imagenes/footer.png">
                 </div>
             </h2>
         </div>
 
-<?php
+        <?php
 
 }
 ?>
