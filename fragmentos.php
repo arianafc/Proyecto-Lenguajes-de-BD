@@ -133,7 +133,7 @@ function incluir_footer()
 function sidebar()
 {
     ?>
-    \
+    
     <!-- Sidebar -->
     <nav id="sidebar" class="sidebar py-3 d-md-block">
         <div class="sidebar-header text-center">
@@ -143,16 +143,18 @@ function sidebar()
 
         <hr>
         <div class="opciones">   
-        <a href="dashboard.php">Dashboard</a>
-        <a href="gestionUsuarios.php">Gestión de Usuarios</a>
-        <a href="gestionPedidos.php">Gestión de Pedidos</a>
-        <a href="gestionProductos.php">Gestión de Productos</a>
-        <a href="gestionInventario.php">Gestión de Inventario</a>
-        <a href="gestionInventario.php">Gestión de Cotizaciones</a></div>
+        <a href="dashboard.php" id="dashboard">Dashboard</a>
+        <a href="gestionUsuarios.php" id="gestionUsuarios">Gestión de Usuarios</a>
+        <a href="gestionPedidos.php" id="gestionPedidos">Gestión de Pedidos</a>
+        <a href="gestionProductos.php" id="gestionProductos">Gestión de Productos</a>
+        <a href="gestionInventario.php" id="gestionInventario">Gestión de Inventario</a>
+        <a href="gestionCotizaciones.php" id="gestionCotizaciones">Gestión de Consultas</a></div>
     </nav>
 
     <!-- Botón de menú -->
     <button class="btn btn-toggle d-md-none m-3" id="menu-toggle">☰</button>
+
+   
     <?php
 }
 

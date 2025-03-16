@@ -60,3 +60,72 @@ body{
 }
 
 
+.cardVerde {
+    background-color: #00211A;
+    border: 0;
+}
+
+.cardCafe {
+    background-color: #5F4142;
+    border: 0;
+}
+
+.cardVerde:hover{
+    transform: scale(1.05); 
+}
+
+.cardCafe:hover{
+  
+        transform: scale(1.05); 
+    }
+
+    .profile {
+        position: relative;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    .profile img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    .dropdown {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        display: none;
+        width: 160px;
+        z-index: 1000;
+    }
+    .dropdown.active {
+        display: block;
+    }
+    .dropdown a {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        text-decoration: none;
+        color: #333;
+    }
+    .dropdown a:hover {
+        background: #f0f0f0;
+    }
+    .dropdown a i {
+        margin-right: 10px;
+    }
+
+    .opciones a.active {
+        color: #A18D50;
+        font-weight: 700;
+        border-radius: 5px;
+        text-transform: uppercase
+    }
+    
+    .opciones{
+        background-color: #00211A !important;
+    }
