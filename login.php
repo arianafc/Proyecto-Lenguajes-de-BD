@@ -80,7 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
+
     <div class="login-container">
+
         <!-- Logo -->
         <img src="/LenguajesBD-Proyecto/Proyecto-Lenguajes-de-BD/img/familia.png" alt="Logo el Legado">
         
@@ -97,17 +99,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <!-- Formulario de login -->
         <form method="POST" action="">
-            <!-- Campo de correo -->
-            <input type="text" name="correo" placeholder="Correo electrónico" required 
+
+            <!-- Campo de usuario -->
+            <input type="text" name="usuario" placeholder="Usuario" required 
                    value="<?php echo isset($correo) ? htmlspecialchars($correo) : ''; ?>">
 
             <!-- Campo de contraseña -->
             <input type="password" name="contraseña" placeholder="Contraseña" required>
 
-            <!-- Opción de guardar datos de ingreso -->
-            <div class="remember">
-                <input type="checkbox" id="remember" name="remember">
-                <label for="remember">¿Desea guardar los datos de ingreso?</label>
+            <!-- Opción para crear una nueva cuenta -->
+            <div class="createAccount">
+                <label for="createAccount">¿No tienes cuenta?</label>
+                <a href="/LenguajesBD-Proyecto/Proyecto-Lenguajes-de-BD/registro.php">Registrarme</a>
             </div>
 
             <!-- Botón de ingreso -->
