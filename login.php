@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Opción para crear una nueva cuenta -->
             <div class="createAccount">
                 <label for="createAccount">¿No tienes cuenta?</label>
-                <a href="/LenguajesBD-Proyecto/Proyecto-Lenguajes-de-BD/registro.php">Registrarme</a>
+                <a href="registro.php">Registrarme</a>
             </div>
 
             <!-- Botón de ingreso -->

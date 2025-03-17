@@ -536,7 +536,7 @@ FOR EACH ROW
 DECLARE
     v_subtotal NUMBER(10,2);
     v_total NUMBER(10,2);
-    v_impuesto CONSTANT NUMBER(5,2) := 0.13;
+    v_impuesto NUMBER(5,2) := 0.13;
 BEGIN
     -- Calcular el subtotal sumando los productos del pedido
     SELECT SUM(PD.CANTIDAD * P.PRECIO)
@@ -553,4 +553,34 @@ BEGIN
     SET SUBTOTAL = v_subtotal,
         TOTAL = v_total
     WHERE ID_PEDIDO = :NEW.ID_PEDIDO;
+END;
+
+--TRIGGER PARA VALIDAR CANTIDAD EN STOCK
+CREATE OR REPLACE TRIGGER TG_VALIDAR_CANTIDAD_CARRITO
+BEFORE INSERT OR UPDATE ON ARTICULOS_CARRITO
+FOR EACH ROW
+DECLARE
+    v_stock_disponible NUMBER;
+BEGIN
+    -- Obtener la cantidad disponible en inventario del producto
+    SELECT CANTIDAD 
+    INTO v_stock_disponible
+    FROM PRODUCTOS
+    WHERE ID_PRODUCTO = :NEW.ID_PRODUCTO;
+
+    -- Validar si la cantidad requerida supera la disponible
+    IF :NEW.CANTIDAD > v_stock_disponible THEN
+        RAISE_APPLICATION_ERROR(-20001, 'No hay suficiente stock disponible para este producto.');
+    END IF;
+END;
+
+
+--TRIGGER PARA ACTUALIZAR STOCK DE PRODUCTOS AL REALIZAR LA COMPRA
+CREATE OR REPLACE TRIGGER TG_ACTUALIZAR_STOCK_AL_COMPRAR
+AFTER INSERT ON PEDIDOS_DETALLES
+FOR EACH ROW
+BEGIN
+    UPDATE PRODUCTOS
+    SET CANTIDAD = CANTIDAD - :NEW.CANTIDAD
+    WHERE ID_PRODUCTO = :NEW.ID_PRODUCTO;
 END;
