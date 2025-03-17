@@ -523,3 +523,34 @@ INNER JOIN ROLS R ON U.ID_ROL = R.ID_ROL
 LEFT JOIN TELEFONOS T ON T.ID_USUARIO = U.ID_USUARIO
 LEFT JOIN DIRECCIONES D ON D.ID_USUARIO = U.ID_USUARIO
 WHERE R.ID_ROL = 1;
+
+
+
+--CREACION DE TRIGGERS
+
+--TRIGGER QUE CALCULA EL SUBTOTAL Y TOTAL DE LOS PEDIDOS SEGUN PEDIDOS DETALLES
+
+CREATE OR REPLACE TRIGGER TG_CALCULAR_SUBTOTAL_TOTAL_PEDIDOS
+AFTER INSERT ON PEDIDOS_DETALLES
+FOR EACH ROW
+DECLARE
+    v_subtotal NUMBER(10,2);
+    v_total NUMBER(10,2);
+    v_impuesto CONSTANT NUMBER(5,2) := 0.13;
+BEGIN
+    -- Calcular el subtotal sumando los productos del pedido
+    SELECT SUM(PD.CANTIDAD * P.PRECIO)
+    INTO v_subtotal
+    FROM PEDIDOS_DETALLES PD
+    JOIN PRODUCTOS P ON PD.ID_PRODUCTO = P.ID_PRODUCTO
+    WHERE PD.ID_PEDIDO = :NEW.ID_PEDIDO;
+
+    -- Calcular el total con el impuesto del 13%
+    v_total := v_subtotal + (v_subtotal * v_impuesto);
+
+    -- Actualizar la tabla PEDIDOS con los valores calculados
+    UPDATE PEDIDOS
+    SET SUBTOTAL = v_subtotal,
+        TOTAL = v_total
+    WHERE ID_PEDIDO = :NEW.ID_PEDIDO;
+END;
