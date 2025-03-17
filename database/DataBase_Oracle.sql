@@ -768,3 +768,66 @@ BEGIN
         );
     END IF;
 END;
+
+--Funciones
+-- 1. Funcion para calcular el total de un carrito de compras
+CREATE OR REPLACE FUNCTION CALCULAR_TOTAL_CARRITO(p_id_carrito NUMBER) RETURN NUMBER IS
+    v_total NUMBER := 0;
+BEGIN
+    SELECT COALESCE(SUM(ac.CANTIDAD * p.PRECIO), 0)
+    INTO v_total
+    FROM ARTICULOS_CARRITO ac
+    JOIN PRODUCTOS p ON ac.ID_PRODUCTO = p.ID_PRODUCTO
+    WHERE ac.ID_CARRITO = p_id_carrito;
+    
+    RETURN v_total;
+END;
+/
+
+-- 2. Funcion para verificar el stock de un producto
+CREATE OR REPLACE FUNCTION VERIFICAR_STOCK_PRODUCTO(p_id_producto NUMBER, p_cantidad NUMBER) RETURN VARCHAR2 IS
+    v_stock NUMBER;
+BEGIN
+    SELECT CANTIDAD INTO v_stock FROM PRODUCTOS WHERE ID_PRODUCTO = p_id_producto;
+    
+    IF v_stock >= p_cantidad THEN
+        RETURN 'Disponible';
+    ELSE
+        RETURN 'No disponible';
+    END IF;
+END;
+/
+
+-- 3. Funcion para obtener el estado de un pedido
+CREATE OR REPLACE FUNCTION OBTENER_ESTADO_PEDIDO(p_id_pedido NUMBER) RETURN VARCHAR2 IS
+    v_estado VARCHAR2(100);
+BEGIN
+    SELECT e.DESCRIPCION INTO v_estado
+    FROM PEDIDOS p
+    JOIN ESTADOS e ON p.ID_ESTADO = e.ID_ESTADO
+    WHERE p.ID_PEDIDO = p_id_pedido;
+    
+    RETURN v_estado;
+END;
+/
+
+-- 4. Funcion para contar productos por categoria
+CREATE OR REPLACE FUNCTION CONTAR_PRODUCTOS_POR_CATEGORIA(p_id_categoria NUMBER) RETURN NUMBER IS
+    v_cantidad NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO v_cantidad FROM PRODUCTOS WHERE ID_CATEGORIA = p_id_categoria;
+    
+    RETURN v_cantidad;
+END;
+/
+
+-- 5. Funcion para obtener el telefono de un usuario
+CREATE OR REPLACE FUNCTION OBTENER_TELEFONO_USUARIO(p_id_usuario NUMBER) RETURN VARCHAR2 IS
+    v_telefono VARCHAR2(255);
+BEGIN
+    SELECT TELEFONO INTO v_telefono FROM TELEFONOS WHERE ID_USUARIO = p_id_usuario AND ROWNUM = 1;
+    
+    RETURN v_telefono;
+END;
+/
+
