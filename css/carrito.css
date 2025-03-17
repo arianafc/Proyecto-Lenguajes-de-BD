@@ -1,0 +1,102 @@
+/* General */
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Carrito de Compras */
+.cart-section {
+    padding: 60px 30px;
+    background-color: #ffffff;
+}
+
+.cart-header {
+    margin-bottom: 40px;
+}
+
+.cart-header h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #00211A;
+}
+
+.cart-items {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 30px;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #00211A;
+    color: #fff;
+}
+
+.table td input {
+    width: 60px;
+    text-align: center;
+}
+
+.cart-total {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.cart-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.cart-actions button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.cart-actions .btn-secondary {
+    background-color: #555;
+    color: #fff;
+}
+
+.cart-actions .btn-primary {
+    background-color: #00211A;
+    color: #fff;
+}
+
+.cart-actions button:hover {
+    opacity: 0.8;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .cart-section {
+        padding: 40px 20px;
+    }
+
+    .cart-items {
+        width: 90%;
+    }
+
+    .cart-header h2 {
+        font-size: 24px;
+    }
+}

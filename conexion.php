@@ -2,7 +2,7 @@
 // Configuración de la conexión
 $db_host = 'localhost'; // Host de la base de datos
 $db_port = '1521';      // Puerto de Oracle (por defecto es 1521)
-$db_service_name = 'ORCL'; // Nombre del servicio de Oracle
+$db_service_name = 'ORCL1'; // Nombre del servicio de Oracle
 $db_user = 'admin';   // Usuario de la base de datos
 $db_password = 'admin'; // Contraseña del usuario
 

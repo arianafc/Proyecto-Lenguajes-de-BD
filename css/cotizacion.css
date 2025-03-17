@@ -1,0 +1,73 @@
+/* General */
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Formulario de Cotización */
+.quotation-section {
+    padding: 60px 30px;
+    background-color: #ffffff;
+}
+
+.quotation-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quotation-title-form {
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #00211A;
+}
+
+.quotation-form input, .quotation-form textarea {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.quotation-form button {
+    background-color: #00211A;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.quotation-form button:hover {
+    background-color: #005f46;
+}
+
+.quotation-form img {
+    width: 120px;
+    margin-bottom: 20px;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .quotation-section {
+        padding: 40px 20px;
+    }
+
+    .quotation-form {
+        width: 90%;
+    }
+
+    .quotation-title-form {
+        font-size: 20px;
+    }
+}

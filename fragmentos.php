@@ -10,6 +10,9 @@ function incluir_css()
     echo '<link rel="stylesheet" href="css/index1.css">';
     echo '<link rel="stylesheet" href="css/dashboard.css">';
     echo '<link rel="stylesheet" href="css/detalleProducto.css">';
+    echo '<link rel="stylesheet" href="css/contacto.css">';
+    echo '<link rel="stylesheet" href="css/cotizacion.css">';
+    echo '<link rel="stylesheet" href="css/carrito.css">';
     echo '<link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre&display=swap" rel="stylesheet">';
     echo '<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">';
 }
@@ -43,11 +46,12 @@ function incluir_navbar()
         <div class="navbar-right">
             <div class="wishlist-icon">♡</div>
 
-            <div class="cart-container">
+            <a href="carrito.php" class="cart-container">
                 <div class="cart-icon">🛒</div>
                 <div class="cart-badge">3</div>
                 <div class="cart-total">$57.00</div>
-            </div>
+            </a>
+
         </div>
     </div>
 
