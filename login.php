@@ -1,68 +1,61 @@
 <?php
 
-//The connection.php file is called to make the connection to the database
 session_start();
 include 'conexion.php';
 
-//Variable to handle error messages
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //The mail input is cleaned using a PHP function that filters out invalid characters in an email.
-    $correo = filter_input(INPUT_POST, 'correo', FILTER_SANITIZE_EMAIL);
-    $contraseña = $_POST['contraseña'];
+    // Obtener y limpiar los datos del formulario
+    $username = trim($_POST['usuario']);
+    $contrasena = $_POST['contraseña'];
 
-    //Validate that the fields are not empty
-    if (empty($correo) || empty($contraseña)) {
+    //Validar que los campos no estén vacíos
+    if (empty($username) || empty($contrasena)) {
         $error = "Por favor, complete todos los campos.";
     } else {
-        //Perform the query to search in the empleado table
-        $stmt = $conexion->prepare("
-            SELECT idEmpleado AS id, contraseña, rol 
-            FROM empleado 
-            WHERE correo = ?
-        ");
-        $stmt->bind_param('s', $correo);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-
-        //If not found in the empleado table, search in the cliente table
-        if ($resultado->num_rows === 0) {
-            $stmt = $conexion->prepare("
-                SELECT idCliente AS id, contraseña, rol 
-                FROM cliente 
-                WHERE correo = ?
-            ");
-            $stmt->bind_param('s', $correo);
-            $stmt->execute();
-            $resultado = $stmt->get_result();
-        }
-
-        if ($resultado->num_rows === 1) {
-            $usuario = $resultado->fetch_assoc();
-
-            //Check if the password matches the user's saved password in the DB 
-            if ($contraseña === $usuario['contraseña']) {
-                //Regenerate session ID to prevent session hijacking using a PHP function
-                session_regenerate_id(true);
-                
-                //Save session data 
-                $_SESSION['id'] = $usuario['id'];
-                $_SESSION['rol'] = $usuario['rol'];
-                $_SESSION['correo'] = $correo;
-                
-                //Redirect based on role
-                if ($usuario['rol'] == 'administrador') {
-                    header('Location: common.php');
-                } elseif ($usuario['rol'] == 'cliente'){
-                    header('Location: common.php');
+        try {
+            // Consulta a la vista para obtener la información del usuario
+            $sql = "SELECT ID_USUARIO, ID_ROL, ROL_DESCRIPCION, EMAIL, CONTRASENA 
+                    FROM V_USUARIOS_ROLES 
+                    WHERE USERNAME = :username";
+            
+            $stmt = oci_parse($conn, $sql);
+            oci_bind_by_name($stmt, ':username', $username);
+            oci_execute($stmt);
+            
+            // Obtener los resultados
+            if ($row = oci_fetch_assoc($stmt)) {
+                // Usuario encontrado, verificar contraseña
+                if ($contrasena === $row['CONTRASENA']) {
+                    // Regenerar ID de sesión para prevenir secuestro de sesión
+                    session_regenerate_id(true);
+                    
+                    // Guardar datos en la sesión
+                    $_SESSION['id'] = $row['ID_USUARIO'];
+                    $_SESSION['id_rol'] = $row['ID_ROL'];
+                    $_SESSION['rol'] = strtolower($row['ROL_DESCRIPCION']);
+                    $_SESSION['correo'] = $row['EMAIL'];
+                    $_SESSION['username'] = $username;
+                    
+                    // Redirigir según el rol
+                    if (strtolower($row['ROL_DESCRIPCION']) == 'administrador') {
+                        header('Location: dashboard.php');
+                    } elseif (strtolower($row['ROL_DESCRIPCION']) == 'comprador') {
+                        header('Location: index.php');
+                    } 
+                    exit();
+                } else {
+                    $error = "Usuario o contraseña incorrectos.";
                 }
-                exit();
             } else {
-                $error = "Correo o contraseña incorrectos.";
+                $error = "Usuario no encontrado.";
             }
-        } else {
-            $error = "Usuario no encontrado.";
+            
+            oci_free_statement($stmt);
+            
+        } catch (Exception $e) {
+            $error = "Error en el sistema: " . $e->getMessage();
         }
     }
 }
@@ -74,23 +67,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página de Login</title>
-    <link rel="stylesheet"  href="css/login.css">>
-    
-    
+    <link rel="stylesheet" href="css/login.css">
 </head>
 
 <body>
-
     <div class="login-container">
 
-        <!-- Logo -->
-        <img src="/LenguajesBD-Proyecto/Proyecto-Lenguajes-de-BD/img/familia.png" alt="Logo el Legado">
+        <img src="\LenguajesBD-Proyecto\Proyecto-Lenguajes-de-BD\img\familia.png" alt="Logo el Legado">
         
-
-        <!-- Título del login-->
         <h2>Inicio de sesión<br>El legado</h2>
 
-        <!-- Mostrar mensaje de error -->
         <?php if (!empty($error)): ?>
             <div class="error-message">
                 <?php echo htmlspecialchars($error); ?>
@@ -100,20 +86,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Formulario de login -->
         <form method="POST" action="">
 
-            <!-- Campo de usuario -->
             <input type="text" name="usuario" placeholder="Usuario" required 
-                   value="<?php echo isset($correo) ? htmlspecialchars($correo) : ''; ?>">
+                   value="<?php echo isset($username) ? htmlspecialchars($username) : ''; ?>">
 
-            <!-- Campo de contraseña -->
             <input type="password" name="contraseña" placeholder="Contraseña" required>
 
-            <!-- Opción para crear una nueva cuenta -->
             <div class="createAccount">
                 <label for="createAccount">¿No tienes cuenta?</label>
                 <a href="registro.php">Registrarme</a>
             </div>
 
-            <!-- Botón de ingreso -->
             <button type="submit">Ingresar</button>
         </form>
     </div>
