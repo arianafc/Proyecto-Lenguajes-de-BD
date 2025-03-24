@@ -4,6 +4,24 @@
 <?php
 // Incluir el archivo de fragmentos
 require_once 'fragmentos.php';
+
+require 'conexion.php';
+
+$idProducto = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+if ($idProducto > 0) {
+    $url = "http://localhost/Proyectos/Proyecto-Lenguajes-de-BD/data/obtenerProductoPorID.php?id=" . $idProducto;
+    $productoJson = file_get_contents($url);
+    $producto = json_decode($productoJson, true);
+
+    if (!$producto || count($producto) === 0) {
+        echo "<p>No se encontró el producto.</p>";
+        exit;
+    }
+} else {
+    echo "<p>ID de producto no válido.</p>";
+    exit;
+}
 ?>
 
 <head>
@@ -19,34 +37,36 @@ require_once 'fragmentos.php';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <?php incluir_css(); ?>
+
 </head>
 
 <body>
     <?php incluir_navbar(); ?>
     <main>
         <section>
-        <br>
-        <div class="mainContainer container-fluid row ">
-                <div class="col ">
-              
+            <br>
+            <div class="mainContainer container-fluid row">
+                <div class="col">
                     <img class="object-fit-lg-contain border rounded imagenHP p-5" src="./img/familia.png">
-
                 </div>
                 <div class="col align-self-center p-5">
-                <h2 class="text-center textos">Title Producto</h2>
-                <p class="text-center"><b>$$</b></p>
-                <br>
-                    <h5>DESCRIPCION DEL PROUCTO</h5>
-                
-                   
-                    <hr>
-                    <br>
-                    <div class="mb-4">
-                <label for="quantity" class="form-label">Cantidad</label>
-                <input type="number" class="form-control" id="quantity" value="1" min="1" style="width: 80px;">
-            </div>
-                    <br>
-                    <button class="btn bg-light" id="btnAgregarCarrito"><a href="" class="fw-bold text-dark">🛒 Agregar al Carrito</a></button>
+                    <div id="container-producto">
+                        <h2 class="text-center textos"><?= $producto[0]['NOMBRE'] ?></h2>
+                        <p class="text-center"><b>₡<?= $producto[0]['PRECIO'] ?></b></p>
+                        <br>
+                        <h5><?= $producto[0]['DESCRIPCION'] ?></h5>
+                        <hr>
+                        <br>
+                        <div class="mb-4">
+                            <label for="quantity" class="form-label">Cantidad</label>
+                            <input type="number" class="form-control" id="quantity" value="1" min="1"
+                                style="width: 80px;">
+                        </div>
+                        <br>
+                        <button class="btn bg-light" id="btnAgregarCarrito">
+                            <a href="#" class="fw-bold text-dark">🛒 Agregar al Carrito</a>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -60,6 +80,8 @@ require_once 'fragmentos.php';
     </main>
 
     <?php incluir_footer(); ?>
+    <script src="js/java.js"></script>
+    <script src="js/jquery-3.7.1.min.js"></script>
 </body>
 
 </html>
