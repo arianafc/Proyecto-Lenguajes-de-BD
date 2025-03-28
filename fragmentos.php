@@ -44,12 +44,8 @@ function incluir_navbar()
         </div>
 
         <div class="navbar-right">
-            <div class="wishlist-icon">♡</div>
-
             <a href="carrito.php" class="cart-container">
                 <div class="cart-icon">🛒</div>
-                <div class="cart-badge">3</div>
-                <div class="cart-total">$57.00</div>
             </a>
 
         </div>
