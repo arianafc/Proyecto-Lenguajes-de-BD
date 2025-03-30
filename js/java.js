@@ -185,7 +185,73 @@ document.addEventListener("DOMContentLoaded", function () {
     closeSuccessBtn.addEventListener("click", function () {
         modal.style.display = "none";
     });
-    });
+
+    //=========================================================================================================
+    //LOGICA PARA EL CARRITO
+
+    function getCarrito() {
+        $.ajax({
+            url: './data/getItemsCarrito.php',  // Cambia esto por la ruta correcta al archivo PHP que ejecuta la lógica de la base de datos
+            type: 'GET',  // Usamos GET ya que no estamos enviando datos, solo pidiendo los datos del carrito
+            dataType: 'json',  // Esperamos una respuesta en formato JSON
+            success: function(data) {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    let total = 0;
+                    $('#tablaCarrito tbody').empty(); 
+                
+                    data.forEach(function(producto) {
+                        let fila = `
+                            <tr>
+                                <td>${producto.NOMBRE}</td>
+                                <td>
+                                    ${producto.CANTIDAD}
+                                </td>
+                                <td>${producto.PRECIO.toLocaleString('es-CR')}</td>
+                                <td>${(producto.PRECIO * producto.CANTIDAD).toLocaleString('es-CR')}</td>
+                                <td>
+                                    <button class="btn btn-danger" onclick="eliminarProducto(${producto.ID_ARTICULO})">Eliminar</button>
+                                    <button class="btn btn-warning" onclick="eliminarProducto(${producto.ID_ARTICULO})">Editar</button>
+                                </td>
+                            </tr>
+                        `;
+                        $('#tablaCarrito').append(fila);
+                        total += producto.PRECIO * producto.CANTIDAD;
+                    });
+
+                    $('.cart-total h3').text('Total: ' + total.toLocaleString('es-CR') + ' CRC');
+                }
+            },
+            error: function(xhr, status, error) {
+               
+                console.log(error);
+                alert('Error al cargar el carrito.');
+            }
+        });
+    }
+
+    getCarrito();
+});
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

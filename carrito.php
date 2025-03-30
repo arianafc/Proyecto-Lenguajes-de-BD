@@ -45,28 +45,13 @@ require_once 'fragmentos.php';
                             <th>Producto</th>
                             <th>Cantidad</th>
                             <th>Precio Unitario (CRC)</th>
-                            <th>Total (CRC)</th>
+                            <th>Subtotal (CRC)</th>
                             <th>Acción</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php foreach ($productos as $producto): ?>
-                            <?php $total += $producto['precio'] * $producto['cantidad']; ?>
-                            <tr>
-                                <td><?php echo $producto['nombre']; ?></td>
-                                <td>
-                                    <input type="number" value="<?php echo $producto['cantidad']; ?>" min="1"
-                                        class="form-control">
-                                </td>
-                                <td><?php echo number_format($producto['precio'], 2, ',', '.'); ?></td>
-                                <td><?php echo number_format($producto['precio'] * $producto['cantidad'], 2, ',', '.'); ?>
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger">Eliminar</button>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
+                   <tbody id="tablaCarrito">
+
+                   </tbody>
                 </table>
 
                 <div class="cart-total">

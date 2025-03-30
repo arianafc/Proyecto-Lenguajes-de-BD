@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             // Consulta a la vista para obtener la información del usuario
-            $sql = "SELECT ID_USUARIO, ID_ROL, ROL_DESCRIPCION, EMAIL, CONTRASENA 
+            $sql = "SELECT ID_USUARIO, ID_ROL, ROL_DESCRIPCION, EMAIL, CONTRASENA, NOMBRE, ID_CARRITO
                     FROM V_USUARIOS_ROLES 
                     WHERE USERNAME = :username";
             
@@ -32,11 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     session_regenerate_id(true);
                     
                     // Guardar datos en la sesión
+                    $_SESSION['id_carrito'] = $row['ID_CARRITO'];
                     $_SESSION['id'] = $row['ID_USUARIO'];
                     $_SESSION['id_rol'] = $row['ID_ROL'];
                     $_SESSION['rol'] = strtolower($row['ROL_DESCRIPCION']);
                     $_SESSION['correo'] = $row['EMAIL'];
                     $_SESSION['username'] = $username;
+                    $_SESSION['nombre'] = $row['NOMBRE'];
                     
                     // Redirigir según el rol
                     if (strtolower($row['ROL_DESCRIPCION']) == 'administrador') {
