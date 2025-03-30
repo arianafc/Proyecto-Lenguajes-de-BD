@@ -15,6 +15,8 @@ require_once 'fragmentos.php';
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
     <?php incluir_css(); ?>
+    <script src="js/java.js"></script>
+    <script src="js/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
@@ -22,7 +24,7 @@ require_once 'fragmentos.php';
     <main>
         <section class="cart-section">
             <div class="cart-header text-center">
-                <h2>Tu Carrito de Compras</h2>
+                <h1 class="productosHP text-center">TU CARRITO</h3>
             </div>
 
             <div class="cart-items">
@@ -53,10 +55,12 @@ require_once 'fragmentos.php';
                             <tr>
                                 <td><?php echo $producto['nombre']; ?></td>
                                 <td>
-                                    <input type="number" value="<?php echo $producto['cantidad']; ?>" min="1" class="form-control">
+                                    <input type="number" value="<?php echo $producto['cantidad']; ?>" min="1"
+                                        class="form-control">
                                 </td>
                                 <td><?php echo number_format($producto['precio'], 2, ',', '.'); ?></td>
-                                <td><?php echo number_format($producto['precio'] * $producto['cantidad'], 2, ',', '.'); ?></td>
+                                <td><?php echo number_format($producto['precio'] * $producto['cantidad'], 2, ',', '.'); ?>
+                                </td>
                                 <td>
                                     <button class="btn btn-danger">Eliminar</button>
                                 </td>
@@ -70,10 +74,59 @@ require_once 'fragmentos.php';
                 </div>
 
                 <div class="cart-actions">
-                    <button class="btn btn-secondary">Seguir Comprando</button>
-                    <button class="btn btn-primary">Proceder al Pago</button>
+                    <button class="btn btn-secondary"><a style="text-decoration: none; color: #fff"
+                            href="productos.php">Seguir Comprando</a></button>
+                    <button class="btn btn-primary" id="checkoutBtn">Proceder al Pago</button>
                 </div>
             </div>
+
+            <div id="checkoutModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Resumen de Compra</h2>
+                    <p>Revisa tu pedido antes de finalizar.</p>
+
+                    <!-- Selección de método de pago -->
+                    <label for="paymentMethod">Método de Pago:</label>
+                    <select id="paymentMethod" class="selectPago">
+                        <option value="">Seleccione un método</option>
+                        <option value="sinpe">Sinpe</option>
+                        <option value="efectivo">Efectivo</option>
+                    </select>
+
+                    <!-- Información adicional para Sinpe -->
+                    <div id="sinpeInfo" class="hidden">
+                        <p><strong>Por favor realice el pago al siguiente número: <span
+                                    class="phone-number">8888-8888</span></strong></p>
+                        <label for="paymentAttachment" class="adjuntarComprobante">Adjuntar Comprobante</label>
+                        <input type="file" id="paymentAttachment">
+                        <p id="file-name"></p>
+                    </div>
+
+                    <div class="cart-summary">
+                        <p class="total">Total: <strong>$XX.XX</strong></p>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button class="btn btn-secondary cancelar" id="closeModal">Cancelar</button>
+                        <button class="btn btn-primary pagar" id="pagarYa">Pagar Ahora</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="loading" class="hidden">
+                <div class="spinner"></div>
+                <p>Procesando pago...</p>
+            </div>
+
+            <!-- Mensaje de éxito -->
+            <div id="successMessage" class="hidden">
+                <h2>✅ Pedido realizado con éxito</h2>
+                <p>Gracias por tu compra.</p>
+                <button class="btn-primary" id="closeSuccess">Aceptar</button>
+            </div>
+
+
         </section>
     </main>
     <hr>

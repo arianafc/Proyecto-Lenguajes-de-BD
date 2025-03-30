@@ -126,8 +126,75 @@ document.addEventListener("DOMContentLoaded", function () {
     
     }
     
+    const modal = document.getElementById("checkoutModal");
+    const modalContent = document.getElementById("modalContent");
+    const openModalBtn = document.getElementById("checkoutBtn");
+    const closeModalBtn = document.getElementById("closeModal");
+    const closeSuccessBtn = document.getElementById("closeSuccess");
+    const closeSpan = document.querySelector(".close");
+    const paymentMethod = document.getElementById("paymentMethod");
+    const sinpeInfo = document.getElementById("sinpeInfo");
+    const pagarYaBtn = document.getElementById("pagarYa");
+    const loading = document.getElementById("loading");
+    const successMessage = document.getElementById("successMessage");
 
+    // Abrir modal
+    openModalBtn.addEventListener("click", () => {
+        modal.style.display = "flex";
+        modalContent.style.display = "block";
+        loading.classList.add("hidden");
+        successMessage.classList.add("hidden");
     });
+
+    // Cerrar modal
+    closeModalBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    closeSpan.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    // Mostrar información de Sinpe si se selecciona
+    paymentMethod.addEventListener("change", function () {
+        if (this.value === "sinpe") {
+            sinpeInfo.classList.remove("hidden");
+        } else {
+            sinpeInfo.classList.add("hidden");
+        }
+    });
+
+    // Simulación de pago al hacer clic en "Pagar Ahora"
+    pagarYaBtn.addEventListener("click", function () {
+        modalContent.style.display = "none"; // Oculta el contenido normal del modal
+        loading.classList.remove("hidden"); // Muestra animación de carga
+
+        setTimeout(() => {
+            loading.classList.add("hidden"); // Oculta animación de carga
+            successMessage.classList.remove("hidden"); // Muestra mensaje de éxito
+        }, 3000); // Simula un tiempo de procesamiento de 3 segundos
+    });
+
+    // Cerrar mensaje de éxito
+    closeSuccessBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+    });
+
+
+
+
+
+
+
+
+
 
 
 
