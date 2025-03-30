@@ -6,6 +6,63 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("✅ DOM completamente cargado.");
  
 
+    function obtenerProductoPorID(id) {
+        fetch(`./data/obtenerProductoPorID.php?id=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Producto obtenido:", data); // Verificar los datos en consola
+                if (data.length > 0) {
+                    mostrarProducto(data[0]);
+                } else {
+                    alert("No se encontró el producto.");
+                }
+            })
+            .catch(error => console.error("Error al obtener el producto: ", error));
+    }
+    
+    function mostrarProducto(producto) {
+        let contenedor = document.getElementById("container-producto");
+    
+        // Si el contenedor no existe, lo creamos
+        if (!contenedor) {
+            console.warn("⚠️ ADVERTENCIA: #container-producto no existe, se creará dinámicamente.");
+    
+            let nuevoContenedor = document.createElement("div");
+            nuevoContenedor.id = "container-producto";
+            nuevoContenedor.classList.add("col", "align-self-center", "p-5");
+    
+            // Agregamos el contenedor dentro de un div que sí exista
+            let mainContainer = document.querySelector("#contenedorDetalle");
+            if (mainContainer) {
+                mainContainer.appendChild(nuevoContenedor);
+            } else {
+                console.error("No se encontró '.mainContainer', el contenedor no puede crearse.");
+                return;
+            }
+    
+            contenedor = nuevoContenedor;
+        }
+    
+        // Ahora sí llenamos el contenedor con los datos del producto
+        contenedor.innerHTML = `
+            <h2 class="text-center textos">${producto.NOMBRE}</h2>
+            <p class="text-center"><b>₡${producto.PRECIO}</b></p>
+            <br>
+            <h5>${producto.DESCRIPCION}</h5>
+            <hr>
+            <br>
+            <div class="mb-4">
+                <label for="quantity" class="form-label">Cantidad</label>
+                <input type="number" class="form-control" id="quantity" value="1" min="1" style="width: 80px;">
+            </div>
+            <br>
+            <button class="btn bg-light" id="btnAgregarCarrito">
+                <a href="#" class="fw-bold text-dark">🛒 Agregar al Carrito</a>
+            </button>
+        `;
+    }
+    
+
     obtenerProductos();
   
 
