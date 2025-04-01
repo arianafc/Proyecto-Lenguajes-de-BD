@@ -36,7 +36,9 @@ if ($idProducto > 0) {
     <link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <?php incluir_css(); ?>
+        <?php incluir_css(); ?>
+    <script src="js/java.js"></script>
+    <script src="js/jquery-3.7.1.min.js"></script>
 
 </head>
 
@@ -59,11 +61,11 @@ if ($idProducto > 0) {
                         <br>
                         <div class="mb-4">
                             <label for="quantity" class="form-label">Cantidad</label>
-                            <input type="number" class="form-control" id="quantity" value="1" min="1"
+                            <input type="number" class="form-control" id="cantidadCarrito" value="1" min="1"
                                 style="width: 80px;">
                         </div>
                         <br>
-                        <button class="btn bg-light" id="btnAgregarCarrito">
+                        <button class="btn bg-light" id="btnAgregarCarrito" data-id="<?= $producto[0]['ID_PRODUCTO'] ?>">
                             <a href="#" class="fw-bold text-dark">🛒 Agregar al Carrito</a>
                         </button>
                     </div>
@@ -80,8 +82,41 @@ if ($idProducto > 0) {
     </main>
 
     <?php incluir_footer(); ?>
-    <script src="js/java.js"></script>
-    <script src="js/jquery-3.7.1.min.js"></script>
+
+    <script>
+    $(document).on("click", "#btnAgregarCarrito", function () {
+        console.log("hola");
+        let idProducto = $(this).data("id"); 
+        console.log(idProducto);
+        let cantidad = $("#cantidadCarrito").val();
+    
+        $.post("./data/addArticuloCarrito.php", {
+            action: "add",
+            idProducto: idProducto,
+            cantidad: cantidad
+        }, function (data, status) {
+            let response;
+            console.log(response);
+            try {
+                response = JSON.parse(data); 
+            } catch (e) {
+                alert("Error en la respuesta del servidor");
+                return;
+            }
+    
+            if (response.success) {
+                alert(response.success); 
+            } else {
+                console.log(response.error);
+                alert(response.error); 
+            }
+        });
+    });
+
+   
+
+    </script>
+    
 </body>
 
 </html>
