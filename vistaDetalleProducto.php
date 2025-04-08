@@ -91,26 +91,44 @@ if ($idProducto > 0) {
         let cantidad = $("#cantidadCarrito").val();
     
         $.post("./data/addArticuloCarrito.php", {
-            action: "add",
-            idProducto: idProducto,
-            cantidad: cantidad
-        }, function (data, status) {
-            let response;
-            console.log(response);
-            try {
-                response = JSON.parse(data); 
-            } catch (e) {
-                alert("Error en la respuesta del servidor");
-                return;
-            }
-    
-            if (response.success) {
-                alert(response.success); 
-            } else {
-                console.log(response.error);
-                alert(response.error); 
-            }
+    action: "add",
+    idProducto: idProducto,
+    cantidad: cantidad
+}, function (data, status) {
+    let response;
+    console.log(response);
+    try {
+        response = JSON.parse(data); 
+    } catch (e) {
+        Swal.fire({
+            title: "Error",
+            text: "Error en la respuesta del servidor",
+            icon: "error",
+            confirmButtonText: "Aceptar"
         });
+        return;
+    }
+
+    if (response.success) {
+        Swal.fire({
+            title: "Éxito",
+            text: response.success,
+            icon: "success",
+            confirmButtonText: "Aceptar"
+        }).then(() => {
+            location.reload(); // Recarga la página después de mostrar el mensaje
+        });
+    } else {
+        console.log(response.error);
+        Swal.fire({
+            title: "Error",
+            text: response.error,
+            icon: "error",
+            confirmButtonText: "Aceptar"
+        });
+    }
+});
+
     });
 
    
