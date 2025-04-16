@@ -15,46 +15,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Por favor, complete todos los campos.";
     } else {
         try {
-            // Consulta a la vista para obtener la información del usuario
-            $sql = "SELECT ID_USUARIO, ID_ROL, ROL_DESCRIPCION, EMAIL, CONTRASENA, NOMBRE, ID_CARRITO
-                    FROM V_USUARIOS_ROLES 
-                    WHERE USERNAME = :username";
+            // Consulta a la vista por medio de un SP para obtener la información del usuario
+            $sql = "BEGIN SP_VERIFICAR_USUARIO(:username, :id_usuario, :id_rol, :rol_descripcion, :email, :contrasena_bd, :nombre, :id_carrito); END;";
             
             $stmt = oci_parse($conn, $sql);
             oci_bind_by_name($stmt, ':username', $username);
-            oci_execute($stmt);
+
+                    // Parámetros de salida
+                    $id_usuario = '';
+                    $id_rol = '';
+                    $rol_descripcion = '';
+                    $email = '';
+                    $contrasena_bd = '';
+                    $nombre = '';
+                    $id_carrito = '';
+                        
+                    oci_bind_by_name($stmt, ':id_usuario', $id_usuario, 32);
+                    oci_bind_by_name($stmt, ':id_rol', $id_rol, 32);
+                    oci_bind_by_name($stmt, ':rol_descripcion', $rol_descripcion, 100);
+                    oci_bind_by_name($stmt, ':email', $email, 100);
+                    oci_bind_by_name($stmt, ':contrasena_bd', $contrasena_bd, 100);
+                    oci_bind_by_name($stmt, ':nombre', $nombre, 100);
+                    oci_bind_by_name($stmt, ':id_carrito', $id_carrito, 32);
+
+                    oci_execute($stmt);
             
-            // Obtener los resultados
-            if ($row = oci_fetch_assoc($stmt)) {
-                // Usuario encontrado, verificar contraseña
-                if ($contrasena === $row['CONTRASENA']) {
-                    // Regenerar ID de sesión para prevenir secuestro de sesión
-                    session_regenerate_id(true);
+                    if (!empty($id_usuario)) {
+                        // Usuario encontrado, verificar contraseña
+                        if ($contrasena === $contrasena_bd) {
+                            // Regenerar ID de sesión para prevenir secuestro de sesión
+                            session_regenerate_id(true);
+                            
+                            // Guardar datos en la sesión
+                            $_SESSION['id_carrito'] = $id_carrito;
+                            $_SESSION['id'] = $id_usuario;
+                            $_SESSION['id_rol'] = $id_rol;
+                            $_SESSION['rol'] = strtolower($rol_descripcion);
+                            $_SESSION['correo'] = $email;
+                            $_SESSION['username'] = $username;
+                            $_SESSION['nombre'] = $nombre;
+                            
+                            // Redirigir según el rol
+                            if (strtolower($rol_descripcion) == 'administrador') {
+                                header('Location: dashboard.php');
+                            } elseif (strtolower($rol_descripcion) == 'comprador') {
+                                header('Location: index.php');
+                            } 
+                            exit();
+                        } else {
+                            $error = "Usuario o contraseña incorrectos.";
+                        }
+                    } else {
+                        $error = "Usuario no encontrado.";
+                    }
                     
-                    // Guardar datos en la sesión
-                    $_SESSION['id_carrito'] = $row['ID_CARRITO'];
-                    $_SESSION['id'] = $row['ID_USUARIO'];
-                    $_SESSION['id_rol'] = $row['ID_ROL'];
-                    $_SESSION['rol'] = strtolower($row['ROL_DESCRIPCION']);
-                    $_SESSION['correo'] = $row['EMAIL'];
-                    $_SESSION['username'] = $username;
-                    $_SESSION['nombre'] = $row['NOMBRE'];
-                    
-                    // Redirigir según el rol
-                    if (strtolower($row['ROL_DESCRIPCION']) == 'administrador') {
-                        header('Location: dashboard.php');
-                    } elseif (strtolower($row['ROL_DESCRIPCION']) == 'comprador') {
-                        header('Location: index.php');
-                    } 
-                    exit();
-                } else {
-                    $error = "Usuario o contraseña incorrectos.";
-                }
-            } else {
-                $error = "Usuario no encontrado.";
-            }
-            
-            oci_free_statement($stmt);
+                    oci_free_statement($stmt);
             
         } catch (Exception $e) {
             $error = "Error en el sistema: " . $e->getMessage();

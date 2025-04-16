@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = "El nombre de usuario o correo electrónico ya están en uso.";
             } else {
 
-                $sql = "BEGIN AGREGAR_USUARIO(:p_nombre, :p_email, :p_estado, :p_apellido1, :p_apellido2, :p_username, :p_contrasena, :p_rol); END;";
+                $sql = "BEGIN SP_AGREGAR_USUARIO(:p_nombre, :p_email, :p_estado, :p_apellido1, :p_apellido2, :p_username, :p_contrasena, :p_rol); END;";
                 $stmt = oci_parse($conn, $sql);
 
                 oci_bind_by_name($stmt, ':p_nombre', $nombre);
