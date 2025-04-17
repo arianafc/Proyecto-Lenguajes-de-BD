@@ -3,6 +3,10 @@
 require_once 'fragmentos.php';
 require_once 'conexion.php';
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Inicializar variables
 $mensaje = '';
 $error = '';
@@ -99,90 +103,6 @@ function obtenerUsuarioPorId($conn, $id_usuario) {
 $usuarios = listarUsuarios($conn);
 $roles = obtenerRoles($conn);
 
-// Manejo de AJAX para SweetAlert
-// Manejo de solicitudes AJAX
-$isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
-    try {
-        $nombre = $_POST['nombre'] ?? '';
-        $apellidos = $_POST['apellidos'] ?? '';
-        $username = $_POST['username'] ?? '';
-        $email = $_POST['email'] ?? '';
-        $password = $_POST['password'] ?? '';
-        $rol = $_POST['rol'] ?? '';
-
-        // Validación de campos
-        if (empty($nombre) || empty($apellidos) || empty($username) || empty($email) || empty($password) || empty($rol)) {
-            throw new Exception("Todos los campos son requeridos");
-        }
-
-        // Insertar usuario con SP
-        $sql = "BEGIN SP_CREAR_USUARIO(:nombre, :apellidos, :username, :email, :password, :rol, :id_usuario); END;";
-        $stmt = oci_parse($conn, $sql);
-
-        oci_bind_by_name($stmt, ':nombre', $nombre);
-        oci_bind_by_name($stmt, ':apellidos', $apellidos);
-        oci_bind_by_name($stmt, ':username', $username);
-        oci_bind_by_name($stmt, ':email', $email);
-        oci_bind_by_name($stmt, ':password', $password);
-        oci_bind_by_name($stmt, ':rol', $rol);
-        oci_bind_by_name($stmt, ':id_usuario', $id_usuario, 10);
-
-        if (!oci_execute($stmt)) {
-            throw new Exception("No se pudo crear el usuario.");
-        }
-
-        oci_free_statement($stmt);
-
-        // Llamar a CREAR_CARRITO
-        $sql = "BEGIN CREAR_CARRITO(:id_usuario); END;";
-        $stmt2 = oci_parse($conn, $sql);
-        oci_bind_by_name($stmt2, ':id_usuario', $id_usuario);
-        if (!oci_execute($stmt2)) {
-            throw new Exception("Error al asignar carrito.");
-        }
-
-        oci_free_statement($stmt2);
-
-        // Respuesta para AJAX
-        if ($isAjax) {
-            header('Content-Type: application/json');
-            echo json_encode(['success' => true, 'message' => 'Usuario agregado correctamente']);
-            exit;
-        }
-
-        $mensaje = "Usuario agregado correctamente.";
-        header("Location: gestionUsuarios.php");
-        exit;
-
-    } catch (Exception $e) {
-        // Respuesta para AJAX
-        if ($isAjax) {
-            header('Content-Type: application/json');
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-            exit;
-        }
-        
-        $error = "Error: " . $e->getMessage();
-    }
-}
-
-// Manejo de desactivación de usuario
-if (isset($_GET['desactivar'])) {
-    try {
-        $id_usuario = $_GET['desactivar'];
-        // Aquí iría tu código para desactivar el usuario
-        // ...
-        
-        $mensaje = "Usuario desactivado correctamente.";
-        header("Location: gestionUsuarios.php");
-        exit;
-    } catch (Exception $e) {
-        $error = "Error al desactivar usuario: " . $e->getMessage();
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -192,7 +112,8 @@ if (isset($_GET['desactivar'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Usuarios - Sistema</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Font Awesome CDN (versión 6 gratuita) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
     <link rel="stylesheet" href="css/dashboard.css">
     <script src="./js/jquery-3.7.1.min.js"></script>
@@ -201,6 +122,7 @@ if (isset($_GET['desactivar'])) {
     
     <?php incluir_css() ?>
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -244,7 +166,7 @@ if (isset($_GET['desactivar'])) {
                 
                 <!-- Botón para agregar usuario -->
                 <div class="mb-3">
-                    <button class="btn btn-primary" onclick="mostrarFormularioUsuario()">
+                    <button id="btnAgregarUsuario" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Agregar Usuario
                     </button>
                 </div>
@@ -257,7 +179,8 @@ if (isset($_GET['desactivar'])) {
                                 <tr>
                                     <th>#</th>
                                     <th>Nombre</th>
-                                    <th>Apellidos</th>
+                                    <th>Primer Apellido</th>
+                                    <th>Segundo Apellido</th>
                                     <th>Usuario</th>
                                     <th>Email</th>
                                     <th>Rol</th>
@@ -270,7 +193,8 @@ if (isset($_GET['desactivar'])) {
                                 <tr>
                                     <td><?php echo $index + 1; ?></td>
                                     <td><?php echo htmlspecialchars($usuario['NOMBRE']); ?></td>
-                                    <td><?php echo htmlspecialchars($usuario['APELLIDOS']); ?></td>
+                                    <td><?php echo htmlspecialchars($usuario['APELLIDO1']); ?></td>
+                                    <td><?php echo htmlspecialchars($usuario['APELLIDO2']); ?></td>
                                     <td><?php echo htmlspecialchars($usuario['USERNAME']); ?></td>
                                     <td><?php echo htmlspecialchars($usuario['EMAIL']); ?></td>
                                     <td><?php echo htmlspecialchars($usuario['ROL_DESCRIPCION'] ?? $usuario['ROL']); ?></td>
@@ -281,13 +205,31 @@ if (isset($_GET['desactivar'])) {
                                     </td>
                                     <td>
                                         <?php if ((isset($usuario['ESTADO']) && $usuario['ESTADO'] != 'INACTIVO') || (isset($usuario['ID_ESTADO']) && $usuario['ID_ESTADO'] == 1)): ?>
-                                            <button class="btn btn-warning btn-sm" 
-                                                    onclick="editarUsuario(<?php echo $usuario['ID_USUARIO']; ?>)">
+                                            <button class="btn-editar btn btn-warning btn-sm"
+                                                data-id="<?= $usuario['ID_USUARIO'] ?? '' ?>"
+                                                data-nombre="<?= $usuario['NOMBRE'] ?? '' ?>"
+                                                data-apellido1="<?= $usuario['APELLIDO1'] ?? '' ?>"
+                                                data-apellido2="<?= $usuario['APELLIDO2'] ?? '' ?>"
+                                                data-email="<?= $usuario['EMAIL'] ?? '' ?>"
+                                                data-username="<?= $usuario['USERNAME'] ?? '' ?>"
+                                                data-contrasena="<?= $usuario['CONTRASENA'] ?? '' ?>"
+                                                data-id_estado="<?= $usuario['ID_ESTADO'] ?? '' ?>"
+                                                data-id_rol="<?= $usuario['ID_ROL'] ?? '' ?>">
                                                 <i class="fas fa-edit"></i> Editar
                                             </button>
-                                            <button class="btn btn-danger btn-sm" 
-                                                    onclick="confirmarDesactivar(<?php echo $usuario['ID_USUARIO']; ?>, '<?php echo htmlspecialchars($usuario['NOMBRE']); ?>')">
+
+                                            <button class="btn btn-danger btn-sm btn-toggle-estado" 
+                                                data-id="<?= $usuario['ID_USUARIO'] ?>" 
+                                                data-nuevo-estado="2" 
+                                                data-nombre="<?= htmlspecialchars($usuario['NOMBRE']) ?>">
                                                 <i class="fas fa-trash-alt"></i> Desactivar
+                                            </button>
+                                        <?php else: // Inactivo ?>
+                                            <button class="btn btn-success btn-sm btn-toggle-estado" 
+                                                data-id="<?= $usuario['ID_USUARIO'] ?>" 
+                                                data-nuevo-estado="1" 
+                                                data-nombre="<?= htmlspecialchars($usuario['NOMBRE']) ?>">
+                                                <i class="fa-regular fa-circle-check"></i> Activar
                                             </button>
                                         <?php endif; ?>
                                     </td>
@@ -304,209 +246,195 @@ if (isset($_GET['desactivar'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-                // Función para mostrar el formulario con SweetAlert
-                function mostrarFormularioUsuario() {
+       // Función para mostrar el formulario con SweetAlert
+       document.getElementById("btnAgregarUsuario").addEventListener("click", function () {
+        Swal.fire({
+            title: 'Agregar Usuario',
+            html: `
+            <input id="swal-nombre" class="swal2-input" placeholder="Nombre">
+            <input id="swal-apellido1" class="swal2-input" placeholder="Primer Apellido">
+            <input id="swal-apellido2" class="swal2-input" placeholder="Segundo Apellido">
+            <input id="swal-email" class="swal2-input" placeholder="Correo">
+            <input id="swal-username" class="swal2-input" placeholder="Usuario">
+            <input id="swal-contrasena" type="password" class="swal2-input" placeholder="Contraseña">
+            <select id="swal-id_estado" class="swal2-input">
+                <option value="">-- Estado --</option>
+                <option value="1">Activo</option>
+                <option value="2">Inactivo</option>
+            </select>
+            <select id="swal-id_rol" class="swal2-input">
+                <option value="">-- Rol --</option>
+                <option value="1">Administrador</option>
+                <option value="2">Usuario</option>
+            </select>
+            `,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: 'Guardar',
+            preConfirm: () => {
+            const data = {
+                action: 'agregar',
+                nombre: document.getElementById('swal-nombre').value,
+                apellido1: document.getElementById('swal-apellido1').value,
+                apellido2: document.getElementById('swal-apellido2').value,
+                email: document.getElementById('swal-email').value,
+                username: document.getElementById('swal-username').value,
+                contrasena: document.getElementById('swal-contrasena').value,
+                id_estado: document.getElementById('swal-id_estado').value,
+                id_rol: document.getElementById('swal-id_rol').value
+            };
+
+            // Validación básica
+            if (!data.nombre || !data.apellido1 || !data.email || !data.username || !data.contrasena || !data.id_estado || !data.id_rol) {
+                Swal.showValidationMessage('Por favor, completa todos los campos obligatorios.');
+                return false;
+            }
+
+            // Enviar al servidor
+            return $.ajax({
+                url: 'data/accionesUsuario.php',
+                type: 'POST',
+                data: data,
+                dataType: 'json'
+            }).then(response => {
+                if (!response.success) {
+                Swal.showValidationMessage(response.message);
+                }
+                return response;
+            }).catch(() => {
+                Swal.showValidationMessage('Error al conectar con el servidor.');
+            });
+            }
+        }).then((result) => {
+            if (result.isConfirmed && result.value.success) {
             Swal.fire({
-                title: 'Agregar Usuario',
+                icon: 'success',
+                title: 'Éxito',
+                text: result.value.message
+            }).then(() => {
+                // Podés actualizar una tabla, limpiar algo o recargar la vista
+                location.reload();
+            });
+            }
+        });
+        });
+
+
+        document.querySelectorAll('.btn-editar').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const usuario = {
+            id_usuario: btn.dataset.id,
+            nombre: btn.dataset.nombre,
+            apellido1: btn.dataset.apellido1,
+            apellido2: btn.dataset.apellido2,
+            email: btn.dataset.email,
+            username: btn.dataset.username,
+            contrasena: btn.dataset.contrasena,
+            id_estado: btn.dataset.id_estado,
+            id_rol: btn.dataset.id_rol
+            };
+
+            Swal.fire({
+                title: 'Editar Usuario',
                 html: `
-                    <form id="usuarioForm" class="text-start">
-                        <input type="hidden" name="accion" value="agregar">
-                        <div class="mb-3">
-                            <label class="form-label">Nombre</label>
-                            <input type="text" name="nombre" class="form-control" required>
-                        </div>
-                     <div class="mb-3">
-                            <label class="form-label">Apellidos</label>
-                            <input type="text" name="apellidos" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Usuario</label>
-                            <input type="text" name="username" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Contraseña</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Rol</label>
-                            <select name="rol" class="form-select" required>
-                                <?php foreach ($roles as $rol): ?>
-                                <option value="<?php echo $rol['ID_ROL']; ?>">
-                                    <?php echo $rol['DESCRIPCION']; ?>
-                                </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </form>
+                    <input id="swal-nombre" class="swal2-input" placeholder="Nombre" value="${usuario.nombre}">
+                    <input id="swal-apellido1" class="swal2-input" placeholder="Apellido 1" value="${usuario.apellido1}">
+                    <input id="swal-apellido2" class="swal2-input" placeholder="Apellido 2" value="${usuario.apellido2}">
+                    <input id="swal-email" class="swal2-input" placeholder="Email" value="${usuario.email}">
+                    <input id="swal-username" class="swal2-input" placeholder="Username" value="${usuario.username}">
+                    <input id="swal-contrasena" type="password" class="swal2-input" placeholder="Contraseña" value="${usuario.contrasena}">
+
+                    <select id="swal-id_estado" class="swal2-input">
+                    <option value="1" ${usuario.id_estado == 1 ? 'selected' : ''}>Activo</option>
+                    <option value="2" ${usuario.id_estado == 2 ? 'selected' : ''}>Inactivo</option>
+                    </select>
+
+                    <select id="swal-id_rol" class="swal2-input">
+                    <option value="1" ${usuario.id_rol == 1 ? 'selected' : ''}>Comprador</option>
+                    <option value="2" ${usuario.id_rol == 2 ? 'selected' : ''}>Administrador</option>
+                    </select>
                 `,
-                focusConfirm: false,
-                showCancelButton: true,
-                confirmButtonText: 'Guardar',
-                cancelButtonText: 'Cancelar',
-                preConfirm: () => {
-                    const form = document.getElementById('usuarioForm');
-                    const formData = new FormData(form);
-                    
-                    // Validación básica
-                    if (!form.querySelector('[name="nombre"]').value.trim()) {
-                        Swal.showValidationMessage('El nombre es requerido');
-                        return false;
-                    }
-                    // ... (validar otros campos) ...
+            confirmButtonText: 'Guardar cambios',
+            focusConfirm: false,
+            preConfirm: () => {
+                const formData = new FormData();
+                formData.append('action', 'modificar');
+                formData.append('id_usuario', usuario.id_usuario);
+                formData.append('nombre', document.getElementById('swal-nombre').value);
+                formData.append('apellido1', document.getElementById('swal-apellido1').value);
+                formData.append('apellido2', document.getElementById('swal-apellido2').value);
+                formData.append('email', document.getElementById('swal-email').value);
+                formData.append('username', document.getElementById('swal-username').value);
+                formData.append('contrasena', document.getElementById('swal-contrasena').value);
+                formData.append('id_estado', document.getElementById('swal-id_estado').value);
+                formData.append('id_rol', document.getElementById('swal-id_rol').value);
 
-                    // Mostrar loader
-                    Swal.showLoading();
-                    
-                    // Enviar datos por AJAX
-                    return fetch(window.location.href, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest' // Identificar como AJAX
-                        }
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            return response.json().then(err => { 
-                                throw new Error(err.message || 'Error en la solicitud'); 
-                            });
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire({
-                                title: 'Éxito',
-                                text: data.message,
-                                icon: 'success'
-                            }).then(() => {
-                                window.location.reload();
-                            });
-                            return false; // Evitar que SweetAlert cierre automáticamente
-                        } else {
-                            throw new Error(data.message);
-                        }
-                    })
-                    .catch(error => {
-                        Swal.hideLoading();
-                        Swal.showValidationMessage(`Error: ${error.message}`);
-                        return false;
-                    });
-                },
-                allowOutsideClick: () => !Swal.isLoading()
-            });
-        }
-
-        // Función para confirmar desactivación de usuario
-        function confirmarDesactivar(id, nombre) {
-            Swal.fire({
-                title: '¿Desactivar usuario?',
-                text: `¿Estás seguro de desactivar a ${nombre}?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, desactivar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Mostrar loader mientras se procesa
-                    Swal.fire({
-                        title: 'Procesando',
-                        text: 'Por favor espere...',
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-                    
-                    // Redirigir para desactivar
-                    window.location.href = `gestionUsuarios.php?desactivar=${id}`;
-                }
-            });
-        }
-
-        // Función para editar usuario
-        function editarUsuario(id) {
-            // Mostrar loader mientras se cargan los datos
-            Swal.fire({
-                title: 'Cargando datos',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-            
-            // Obtener datos del usuario via AJAX
-            fetch(`obtener_usuario.php?id=${id}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error al obtener datos del usuario');
-                    }
-                    return response.json();
+                return fetch('data/accionesUsuario.php', {
+                method: 'POST',
+                body: formData
                 })
-                .then(usuario => {
-                    Swal.fire({
-                        title: 'Editar Usuario',
-                        html: `
-                            <form id="editarUsuarioForm" class="text-start">
-                                <input type="hidden" name="accion" value="editar">
-                                <input type="hidden" name="id_usuario" value="${id}">
-                                <div class="mb-3">
-                                    <label class="form-label">Nombre</label>
-                                    <input type="text" name="nombre" class="form-control" value="${usuario.NOMBRE}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Apellidos</label>
-                                    <input type="text" name="apellidos" class="form-control" value="${usuario.APELLIDOS}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Usuario</label>
-                                    <input type="text" name="username" class="form-control" value="${usuario.USERNAME}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" name="email" class="form-control" value="${usuario.EMAIL}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Nueva Contraseña (dejar vacío para no cambiar)</label>
-                                    <input type="password" name="password" class="form-control">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Rol</label>
-                                    <select name="rol" class="form-select" required>
-                                        <?php foreach ($roles as $rol): ?>
-                                        <option value="<?php echo $rol['ID_ROL']; ?>" ${usuario.ID_ROL == <?php echo $rol['ID_ROL']; ?> ? 'selected' : ''}>
-                                            <?php echo $rol['DESCRIPCION']; ?>
-                                        </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </form>
-                        `,
-                        focusConfirm: false,
-                        showCancelButton: true,
-                        confirmButtonText: 'Actualizar',
-                        cancelButtonText: 'Cancelar',
-                        preConfirm: () => {
-                            // Similar a la función de agregar, pero para editar
-                            // Implementar lógica de actualización aquí
-                        }
-                    });
+                .then(res => res.json())
+                .then(data => {
+                if (!data.success) {
+                    throw new Error(data.message);
+                }
+                return data;
                 })
                 .catch(error => {
-                    Swal.fire({
-                        title: 'Error',
-                        text: error.message,
-                        icon: 'error'
-                    });
+                Swal.showValidationMessage(`Error: ${error.message}`);
                 });
-        }
+            }
+            }).then(result => {
+            if (result.isConfirmed && result.value.success) {
+                Swal.fire('¡Actualizado!', result.value.message, 'success').then(() => {
+                location.reload(); // o refrescar solo la tabla si lo preferís
+                });
+            }
+            });
+        });
+        });
 
+
+        document.querySelectorAll('.btn-toggle-estado').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const nuevoEstado = btn.dataset.nuevoEstado;
+                const nombre = btn.dataset.nombre;
+
+                Swal.fire({
+                    title: `${nuevoEstado == 1 ? 'Activar' : 'Desactivar'} Usuario`,
+                    text: `¿Estás seguro de que querés ${nuevoEstado == 1 ? 'activar' : 'desactivar'} a ${nombre}?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, continuar',
+                    cancelButtonText: 'Cancelar'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        const formData = new FormData();
+                        formData.append('action', 'cambiar_estado');
+                        formData.append('id_usuario', id);
+                        formData.append('nuevo_estado', nuevoEstado);
+
+                        fetch('data/accionesUsuario.php', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire('Hecho', data.message, 'success').then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire('Error', data.message, 'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+     
         // Función para manejar el dropdown del perfil
         function toggleDropdown() {
             const dropdown = document.getElementById('dropdownMenu');
