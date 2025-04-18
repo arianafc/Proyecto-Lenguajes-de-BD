@@ -46,6 +46,8 @@ function incluir_navbar()
     </div>
     </div>
 
+
+
     <!-- Main Navbar -->
     <div class="navbar">
         <div class="logo-container">
@@ -53,12 +55,14 @@ function incluir_navbar()
             <span class="logo-text">DISTRIBUIDORA EL LEGADO</span>
         </div>
 
-        <div class="navbar-right">
-            <a href="carrito.php" class="cart-container">
-                <div class="cart-icon">🛒</div>
-            </a>
+        <?php if (isset($_SESSION['id'])): ?>
+    <div class="navbar-right">
+        <a href="carrito.php" class="cart-container">
+            <div class="cart-icon">🛒</div>
+        </a>
+    </div>
+<?php endif; ?>
 
-        </div>
     </div>
 
     <!-- Main Menu -->

@@ -10,7 +10,7 @@ if(!$conn) {
 $idProducto = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 //LLAMAMOS AL PROCEDIMIENTO ALMACENADO
-$sql = "BEGIN SP_OBTENER_PRODUCTO_POR_ID(:cursor, :idProducto); END;";
+$sql = "BEGIN PKG_LEGADO.SP_GET_PRODUCTO_ID(:cursor, :idProducto); END;";
 $stmt = oci_parse($conn, $sql);
 
 //DECLARAMOS UN CURSOR NUEVO

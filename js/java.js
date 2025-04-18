@@ -4,7 +4,6 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     console.log("✅ DOM completamente cargado.");
- 
 
 
     obtenerProductos();
@@ -48,7 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
             card.classList.add("products-grid");
             card.innerHTML = `
                 <div class="product-card">
-                    <div class="product-image">🥗</div>
                     <h3 class="product-title">${producto.NOMBRE}</h3>
                     <p class="product-description">${producto.DESCRIPCION}</p>
                     <p class="product-price">₡${producto.PRECIO}</p>
@@ -322,7 +320,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (metodo === "sinpe") {
                         container.innerHTML = `
                             <p><strong>Realice el pago por SINPE Móvil al número <span class="text">8888-8888</span></strong></p>
-                            <p><strong>A nombre de: Los Jaúles Club Campestre</strong></p>
+                            <p><strong>A nombre de: El Legado de Mis Padres</strong></p>
                             <label for="transferCode">Código de Transferencia:</label>
                             <input type="text" id="transferCode" placeholder="Ej: TRX12345" class="swal2-input"><br>
                             <label for="paymentAttachment" class="adjuntarComprobante">Adjuntar Comprobante</label>
