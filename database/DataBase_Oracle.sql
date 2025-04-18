@@ -392,22 +392,6 @@ EXCEPTION
         RAISE_APPLICATION_ERROR(-20005, 'ERROR AL EDITAR USUARIO: ' || SQLERRM);
 END;
 
-
---SP ELIMINAR USUARIO
-
-CREATE OR REPLACE PROCEDURE SP_ELIMINAR_USUARIO(
-    P_ID_USUARIO IN NUMBER
-) AS
-BEGIN
-    DELETE FROM USUARIOS
-    WHERE ID_USUARIO = P_ID_USUARIO;
-
-        COMMIT;
-EXCEPTION
-    WHEN OTHERS THEN
-        ROLLBACK;
-END;
-
 --Para desactivar o activar un usuario
 CREATE OR REPLACE PROCEDURE SP_CAMBIAR_ESTADO_USUARIO (
     P_ID_USUARIO IN NUMBER,
@@ -437,12 +421,13 @@ CREATE OR REPLACE PROCEDURE SP_VERIFICAR_USUARIO(
     p_email OUT VARCHAR2,
     p_contrasena OUT VARCHAR2,
     p_nombre OUT VARCHAR2,
-    p_id_carrito OUT NUMBER
+    p_id_carrito OUT NUMBER,
+    p_estado_usuario   OUT NUMBER
 )
 AS
 BEGIN
-    SELECT ID_USUARIO, ID_ROL, ROL_DESCRIPCION, EMAIL, CONTRASENA, NOMBRE, ID_CARRITO
-    INTO p_id_usuario, p_id_rol, p_rol_descripcion, p_email, p_contrasena, p_nombre, p_id_carrito
+    SELECT ID_USUARIO, ID_ROL, ROL_DESCRIPCION, EMAIL, CONTRASENA, NOMBRE, ID_CARRITO, ID_ESTADO
+    INTO p_id_usuario, p_id_rol, p_rol_descripcion, p_email, p_contrasena, p_nombre, p_id_carrito, p_estado_usuario
     FROM V_USUARIOS_ROLES 
     WHERE USERNAME = p_username;
     
@@ -455,6 +440,7 @@ EXCEPTION
         p_contrasena := NULL;
         p_nombre := NULL;
         p_id_carrito := NULL;
+        p_estado_usuario := NULL;
     WHEN OTHERS THEN
         RAISE;
 END SP_VERIFICAR_USUARIO;

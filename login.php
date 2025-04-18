@@ -9,6 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obtener y limpiar los datos del formulario
     $username = trim($_POST['usuario']);
     $contrasena = $_POST['contraseña'];
+    $estado_usuario = '';
+
 
     //Validar que los campos no estén vacíos
     if (empty($username) || empty($contrasena)) {
@@ -16,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             // Consulta a la vista por medio de un SP para obtener la información del usuario
-            $sql = "BEGIN SP_VERIFICAR_USUARIO(:username, :id_usuario, :id_rol, :rol_descripcion, :email, :contrasena_bd, :nombre, :id_carrito); END;";
+            $sql = "BEGIN SP_VERIFICAR_USUARIO(:username, :id_usuario, :id_rol, :rol_descripcion, :email, :contrasena_bd, :nombre, :id_carrito, :estado_usuario); END;";
             
             $stmt = oci_parse($conn, $sql);
             oci_bind_by_name($stmt, ':username', $username);
@@ -37,12 +39,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     oci_bind_by_name($stmt, ':contrasena_bd', $contrasena_bd, 100);
                     oci_bind_by_name($stmt, ':nombre', $nombre, 100);
                     oci_bind_by_name($stmt, ':id_carrito', $id_carrito, 32);
+                    oci_bind_by_name($stmt, ':estado_usuario', $estado_usuario, 32);
 
                     oci_execute($stmt);
             
-                    if (!empty($id_usuario)) {
-                        // Usuario encontrado, verificar contraseña
-                        if ($contrasena === $contrasena_bd) {
+                    if (!empty($id_usuario)) {                        
+                        if ($estado_usuario == 2) {
+                            $error = "Tu cuenta está inactiva. Por favor contactá al administrador.";
+                            // Usuario encontrado, verificar contraseña
+                        } elseif ($contrasena === $contrasena_bd) {
                             // Regenerar ID de sesión para prevenir secuestro de sesión
                             session_regenerate_id(true);
                             
