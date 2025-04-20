@@ -35,12 +35,24 @@ require_once 'conexion.php';
                 <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2" id="tituloAdmin">GESTIÓN DE SOLICITUDES</h1>
-                    <div class="profile" onclick="toggleDropdown()">
-                        <span><?php echo $_SESSION['nombre'] ?? 'producto'; ?> ▼</span>
-                        <div class="dropdown" id="dropdownMenu" style="display: none;">
-                            <a href="ajustes.php"><i class="fas fa-cog"></i> Ajustes</a>
-                            <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                        </div>
+                    <div class="profile">
+                    <?php
+            if (!isset($_SESSION['id'])) {
+                // Si el usuario no está logueado
+                echo '<div class="auth-links"><a href="login.php">Sign In / Sign Up</a></div>';
+            } else {
+                // Si el usuario está logueado
+                echo '<div class="auth-links">';
+                echo '<div onclick="toggleDropdown()" style="cursor: pointer;">';
+                echo 'Bienvenido, ' . $_SESSION['nombre'] . ' ▼';
+                echo '<div class="dropdown" id="dropdownMenu" style="display: none;">';
+                echo '<a href="#"><i class="fas fa-cog"></i> Ajustes</a>';
+                echo '<a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>';
+                echo '</div>';
+                echo '</div>';
+                echo '</div>';
+            }
+        ?>
                     </div>
                 </div>
 
@@ -79,4 +91,45 @@ require_once 'conexion.php';
    
 </body>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.getElementById("menu-toggle").addEventListener("click", function () {
+            document.getElementById("sidebar").classList.toggle("show");
+            document.getElementById("content").classList.toggle("shift");
+        });
+
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        var salesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Enero', 'Febrero', 'Marzo', 'Abril'],
+                datasets: [{
+                    label: 'Ventas',
+                    data: [30, 50, 80, 60],
+                    borderColor: 'rgb(75, 192, 192)',
+                    fill: false
+                }]
+            }
+        });
+
+        function toggleDropdown() {
+    var dropdown = document.getElementById("dropdownMenu");
+    if (dropdown.style.display === "none" || dropdown.style.display === "") {
+        dropdown.style.display = "block";
+    } else {
+        dropdown.style.display = "none";
+    }
+}
+
+// Cierra el dropdown cuando se hace clic en cualquier otra parte de la página
+document.addEventListener('click', function(event) {
+    var profile = document.querySelector('.profile');
+    var dropdown = document.getElementById('dropdownMenu');
+    
+    if (profile && !profile.contains(event.target) && dropdown) {
+        dropdown.style.display = 'none';
+    }
+});
+    </script>
 </html>

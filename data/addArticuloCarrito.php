@@ -20,7 +20,7 @@ switch ($action) {
         } else {
             $idCarrito = $_SESSION['id_carrito'];
         
-            $sql = "BEGIN PKG_CARRITO.SP_GET_CARRITO_USUARIO(:cursor, :id); END;";
+            $sql = "BEGIN PKG_LEGADO.SP_GET_CARRITO_USUARIO(:cursor, :id); END;";
             $stmt = oci_parse($conn, $sql);
         
             $cursor = oci_new_cursor($conn);
@@ -70,7 +70,7 @@ switch ($action) {
 
         $idCarrito = $_SESSION['id_carrito'];
 
-        $sql = "BEGIN PKG_CARRITO.SP_AGREGAR_ARTICULO_CARRITO (:idCarrito, :idProducto, :cantidad); END;";
+        $sql = "BEGIN PKG_LEGADO.SP_AGREGAR_ARTICULO_CARRITO (:idCarrito, :idProducto, :cantidad); END;";
         $stmt = oci_parse($conn, $sql);
 
         oci_bind_by_name($stmt, ":idCarrito", $idCarrito, -1, SQLT_INT);
@@ -103,7 +103,7 @@ switch ($action) {
 
         $idCarrito = $_SESSION['id_carrito'];
 
-        $sql = "BEGIN PKG_CARRITO.SP_ELIMINAR_ARTICULO_CARRITO (:idProducto); END;";
+        $sql = "BEGIN PKG_LEGADO.SP_ELIMINAR_ARTICULO_CARRITO (:idProducto); END;";
         $stmt = oci_parse($conn, $sql);
 
 
@@ -135,7 +135,7 @@ switch ($action) {
 
         $idCarrito = $_SESSION['id_carrito'];
         $cantidad = $_POST['cantidad'];
-        $sql = "BEGIN PKG_CARRITO.SP_EDITAR_ARTICULO_CARRITO (:idArticulo, :cantidad); END;";
+        $sql = "BEGIN PKG_LEGADO.SP_EDITAR_ARTICULO_CARRITO (:idArticulo, :cantidad); END;";
         $stmt = oci_parse($conn, $sql);
 
 
@@ -163,7 +163,7 @@ switch ($action) {
         }
 
         $metodo = $_POST['metodo'];
-        $sql = "BEGIN PKG_CHECKOUT.SP_EJECUTAR_CHECKOUT(:carrito, :idUsuario, :metodoPago); END;";
+        $sql = "BEGIN PKG_LEGADO.SP_EJECUTAR_CHECKOUT(:carrito, :idUsuario, :metodoPago); END;";
         $stmt = oci_parse($conn, $sql);
 
 
@@ -192,7 +192,7 @@ switch ($action) {
         $carrito_id = $_SESSION['id_carrito'];
         $total = 0;
 
-        $stid = oci_parse($conn, "BEGIN :resultado := PKG_CARRITO.FN_CONTAR_ARTICULOS_CARRITO(:id_carrito); END;");
+        $stid = oci_parse($conn, "BEGIN :resultado := PKG_LEGADO.FN_CONTAR_ARTICULOS_CARRITO(:id_carrito); END;");
         oci_bind_by_name($stid, ":resultado", $total, 10);
         oci_bind_by_name($stid, ":id_carrito", $carrito_id);
 
