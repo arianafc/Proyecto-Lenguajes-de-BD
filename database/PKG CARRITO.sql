@@ -190,7 +190,9 @@ commit;
 EXEC PKG_CARRITO.SP_EDITAR_ARTICULO_CARRITO (44, 3);
 
 COMMIT;
-
+SELECT value 
+FROM nls_database_parameters 
+WHERE parameter = 'NLS_CHARACTERSET';
 
 
 

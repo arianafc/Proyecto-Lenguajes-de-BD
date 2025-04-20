@@ -19,6 +19,7 @@ require_once 'fragmentos.php';
     <script src="js/carrito.js"></script>
     <script src="js/perfil.js"></script>
     <script src="js/direcciones.js"></script>
+    <script src="js/telefonos.js"></script>
 
     <link rel="stylesheet" href="css/perfil.css">
 </head>
@@ -70,7 +71,8 @@ require_once 'fragmentos.php';
                     <button type="submit" class="btn btn-primary mt-3">Guardar Cambios</button>
                 </form>
                 <hr>
-                <div class="table-responsive">
+                <div class="row">
+                <div class="table-responsive col-md-6">
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr>
@@ -89,6 +91,24 @@ require_once 'fragmentos.php';
                         
                     </table>
                     <button class="btn btn-primary" id="btnAgregarDireccion">Agregar dirección</button>
+                </div>
+                <div class="table-responsive col-md-6">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Teléfono</th>
+                                <th>Acciones</th>
+                            </tr>
+                           
+                       
+                        </thead>
+                        <tbody id="tablaTelefonos">
+                        </tbody>
+                       
+                        
+                    </table>
+                    <button class="btn btn-primary" id="btnAgregarTelefono">Agregar Teléfono</button>
+                </div>
                 </div>
 
             </div>
