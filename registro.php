@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             // Crear usuario
-            $sql = "BEGIN SP_AGREGAR_USUARIO(:p_nombre, :p_email, :p_estado, :p_apellido1, :p_apellido2, :p_username, :p_contrasena, :p_rol, :p_id_usuario); END;";
+            $sql = "BEGIN PKG_LEGADO.SP_AGREGAR_USUARIO(:p_nombre, :p_email, :p_estado, :p_apellido1, :p_apellido2, :p_username, :p_contrasena, :p_rol, :p_id_usuario); END;";
             $stmt = oci_parse($conn, $sql);
 
             oci_bind_by_name($stmt, ':p_nombre', $nombre);
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // Crear carrito para el nuevo usuario
-            $sql_carrito = "BEGIN CREAR_CARRITO(:p_id_usuario); END;";
+            $sql_carrito = "BEGIN PKG_LEGADO.SP_CREAR_CARRITO(:p_id_usuario); END;";
             $stmt_carrito = oci_parse($conn, $sql_carrito);
             oci_bind_by_name($stmt_carrito, ':p_id_usuario', $id_usuario);
 

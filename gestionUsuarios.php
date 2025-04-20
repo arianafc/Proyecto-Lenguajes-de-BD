@@ -20,7 +20,7 @@ function listarUsuarios($conn) {
     $usuarios = [];
     
     // Preparar la llamada al SP LISTAR_USUARIOS
-    $sql = "BEGIN SP_LISTAR_USUARIOS(:cursor); END;";
+    $sql = "BEGIN PKG_LEGADO.SP_LISTAR_USUARIOS(:cursor); END;";
     $stmt = oci_parse($conn, $sql);
     
     // Definir el cursor
@@ -51,7 +51,7 @@ function obtenerRoles($conn) {
     $roles = [];
     
     // Preparar la llamada al SP OBTENER_ROLES
-    $sql = "BEGIN SP_OBTENER_ROLES(:cursor); END;";
+    $sql = "BEGIN PKG_LEGADO.SP_OBTENER_ROLES(:cursor); END;";
     $stmt = oci_parse($conn, $sql);
     
     $cursor = oci_new_cursor($conn);
@@ -235,7 +235,7 @@ $roles = obtenerRoles($conn);
             <select id="swal-id_rol" class="swal2-input">
                 <option value="">-- Rol --</option>
                 <option value="1">Administrador</option>
-                <option value="2">Usuario</option>
+                <option value="2">Comprador</option>
             </select>
             `,
             focusConfirm: false,
