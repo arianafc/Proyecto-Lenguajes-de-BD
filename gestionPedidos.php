@@ -1,91 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <?php
-// Incluir el archivo de fragmentos
 require_once 'fragmentos.php';
+require_once 'conexion.php';
 ?>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="js/java.js"></script>
-    <?php incluir_css()?>
+    <?php incluir_css() ?>
 </head>
-
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <?php sidebar() ?>
-            <!-- Contenido -->
-            <main id="content" class="col-md-10 ms-sm-auto px-md-4 content">
-                <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2" id="tituloAdmin">GESTIÓN DE PEDIDOS</h1>
-                    <div class="profile" onclick="toggleDropdown()">
-                        <span>Username ▼</span>
-                        <div class="dropdown" id="dropdownMenu">
-                            <a href="#"><i class="fas fa-cog"></i> Ajustes</a>
-                            <a href="#"><i class="fas fa-sign-out"></i> Logout</a>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Tarjetas informativas -->
-                <div class="row">
-                    
-                </div>
-
-                <!-- Gráfico (placeholder) -->
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Sales Analytics</h5>
-
+<div class="container-fluid">
+    <div class="row">
+        <?php sidebar() ?>
+        <main id="content" class="col-md-10 ms-sm-auto px-md-4 content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" id="tituloAdmin">GESTIÓN DE PEDIDOS</h1>
+                <div class="profile" onclick="toggleDropdown()">
+                    <span>ADMIN ▼</span>
+                    <div class="dropdown" id="dropdownMenu">
+                        <a href="#"><i class="fas fa-cog"></i> Ajustes</a>
+                        <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
                     </div>
                 </div>
-            </main>
-        </div>
-    </div>
+            </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.getElementById("menu-toggle").addEventListener("click", function () {
-            document.getElementById("sidebar").classList.toggle("show");
-            document.getElementById("content").classList.toggle("shift");
-        });
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Lista de Pedidos</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID Pedido</th>
+                                    <th>Fecha</th>
+                                    <th>Cliente</th>
+                                    <th>Estado</th>
+                                    <th>Subtotal</th>
+                                    <th>Total</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+<?php
+$estado_siguiente = [
+    'NUEVO' => 3, 
+    'EN PROCESO' => 7, 
+    'EN CAMINO' => 5
+];
 
-        var ctx = document.getElementById('salesChart').getContext('2d');
-        var salesChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Enero', 'Febrero', 'Marzo', 'Abril'],
-                datasets: [{
-                    label: 'Ventas',
-                    data: [30, 50, 80, 60],
-                    borderColor: 'rgb(75, 192, 192)',
-                    fill: false
-                }]
+$colores_estado = [
+    'NUEVO' => 'secondary', 
+    'EN PROCESO' => 'warning', 
+    'EN CAMINO' => 'primary',
+    'ENTREGADO' => 'success'
+];
+
+// Usamos el cursor de obtener pedidos
+$query = "BEGIN PKG_LEGADO.OBTENER_PEDIDOS(:cursor_pedidos); END;";
+$stmt = oci_parse($conn, $query);
+$cursor = oci_new_cursor($conn);
+oci_bind_by_name($stmt, ':cursor_pedidos', $cursor, -1, OCI_B_CURSOR);
+
+if (oci_execute($stmt)) {
+    oci_execute($cursor);
+    while ($row = oci_fetch_assoc($cursor)) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($row['ID_PEDIDO']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['FECHA']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['NOMBRE_CLIENTE']) . "</td>";
+
+        $estado = $row['ESTADO'];  // Estado ya es la descripción
+        $color = $colores_estado[$estado] ?? "secondary";
+        echo "<td><span class='badge bg-$color'>" . htmlspecialchars($estado) . "</span></td>";
+
+        echo "<td>₡" . number_format($row['SUBTOTAL'], 2) . "</td>";
+        echo "<td>₡" . number_format($row['TOTAL'], 2) . "</td>";
+
+        echo "<td>";
+        if ($estado == 'ENTREGADO') {
+            echo "<span class='text-success fs-4' title='Entregado'><i class='fas fa-check-circle'></i></span>";
+        } else {
+            echo "<form method='POST' style='display:inline-block;' onsubmit=\"return confirmarCancelacion(event)\">
+                    <input type='hidden' name='id_cancelar' value='" . $row['ID_PEDIDO'] . "'>
+                    <button type='submit' class='btn btn-danger btn-sm' name='btn_cancelar'>Cancelar</button>
+                  </form>";
+
+            if (isset($estado_siguiente[$estado])) {
+                $nuevo_estado = $estado_siguiente[$estado];
+                echo "<form method='POST' style='display:inline-block; margin-left:5px;'>
+                        <input type='hidden' name='id_pedido' value='" . $row['ID_PEDIDO'] . "'>
+                        <input type='hidden' name='nuevo_estado' value='" . $nuevo_estado . "'>
+                        <button type='submit' class='btn btn-primary btn-sm' name='btn_estado'>Actualizar Estado</button>
+                      </form>";
             }
-        });
-
-        function toggleDropdown() {
-            document.getElementById("dropdownMenu").classList.toggle("active");
         }
-        document.addEventListener("click", function(event) {
-            var dropdown = document.getElementById("dropdownMenu");
-            if (!event.target.closest(".profile")) {
-                dropdown.classList.remove("active");
+        echo "</td>";
+        echo "</tr>";
+    }
+} else {
+    $e = oci_error($stmt);
+    echo "<tr><td colspan='7'>Error: " . htmlentities($e['message'], ENT_QUOTES) . "</td></tr>";
+}
+oci_free_statement($stmt);
+oci_free_cursor($cursor);
+
+// Cancelar pedido
+if (isset($_POST['btn_cancelar'])) {
+    $idCancelar = $_POST['id_cancelar'];
+    $stmtCancel = oci_parse($conn, "BEGIN PKG_LEGADO.ELIMINAR_PEDIDO(:id_pedido); END;");
+    oci_bind_by_name($stmtCancel, ":id_pedido", $idCancelar);
+    if (oci_execute($stmtCancel)) {
+        echo "<script>location.reload();</script>";
+    } else {
+        $e = oci_error($stmtCancel);
+        echo "<div class='alert alert-danger'>Error al cancelar pedido: " . htmlentities($e['message'], ENT_QUOTES) . "</div>";
+    }
+    oci_free_statement($stmtCancel);
+}
+
+// Actualizar estado del pedido
+if (isset($_POST['btn_estado'])) {
+    $id = $_POST['id_pedido'];
+    $nuevo_estado = $_POST['nuevo_estado'];
+
+    // Se utiliza el procedimiento ACTUALIZAR_ESTADO_PEDIDO
+    $stmtUpdate = oci_parse($conn, "BEGIN PKG_LEGADO.ACTUALIZAR_ESTADO_PEDIDO(:id, :nuevo_estado); END;");
+    oci_bind_by_name($stmtUpdate, ":id", $id);
+    oci_bind_by_name($stmtUpdate, ":nuevo_estado", $nuevo_estado);
+
+    if (oci_execute($stmtUpdate)) {
+        // Redirigir a la misma página para evitar la recarga infinita
+        echo "<script>window.location.href = window.location.href;</script>";
+    } else {
+        $e = oci_error($stmtUpdate);
+        echo "<div class='alert alert-danger'>Error al actualizar estado: " . htmlentities($e['message'], ENT_QUOTES) . "</div>";
+    }
+
+    oci_free_statement($stmtUpdate);
+}
+?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function toggleDropdown() {
+        document.getElementById("dropdownMenu").classList.toggle("active");
+    }
+    document.addEventListener("click", function (event) {
+        if (!event.target.closest(".profile")) {
+            document.getElementById("dropdownMenu").classList.remove("active");
+        }
+    });
+
+    function confirmarCancelacion(event) {
+        event.preventDefault();
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "El pedido será cancelado.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, cancelar',
+            cancelButtonText: 'No, volver',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                event.target.submit();
             }
         });
-    </script>
+        return false;
+    }
+</script>
 </body>
-
 </html>
