@@ -20,6 +20,7 @@ require_once 'fragmentos.php';
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <?php incluir_css(); ?>
     <script src="js/carrito.js"></script>
+    <script src="js/productos.js"></script>
 </head>
 
 <body>
@@ -40,22 +41,11 @@ require_once 'fragmentos.php';
                     <span><a href="" class="fw-bold text-dark">¿Quienes Somos?</a></span>
                 </div>
             </div>
-            <hr>
+        <br>
             <h1 class="productosHP text-center">NUESTROS PRODUCTOS</h3>
                 <section class="products-section">
-                    <div class="container">
-                        <div class="products-grid">
-                            <div class="product-card">
-
-                                <div class="product-card">
-                                    <div class="product-image">🥗</div>
-                                    <h3 class="product-title">Hamburguesa Vegetariana</h3>
-                                    <p class="product-description">Opción saludable para su menú</p>
-                                    <p class="product-price">$14.25</p>
-                                    <button class="btn bg-light">Añadir al carrito</button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="container" id="contenedor-productosIndex">
+                       
                 </section>
         </section>
         <br>

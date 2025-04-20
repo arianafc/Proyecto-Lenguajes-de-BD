@@ -143,6 +143,71 @@ switch ($action) {
                 echo json_encode($response);
             }
             break;
+            case 'productosPorCategoria':
+                $categoria = $_POST['idCategoria'];
+        
+                $conn = oci_connect(DB_USER, DB_PASS, DB_CONNECTION);
+                if (!$conn) {
+                    echo json_encode(['error' => 'No se pudo conectar a la base de datos']);
+                    exit;
+                }
+        
+                $query = 'BEGIN PKG_LEGADO.SP_GET_PRODUCTOS_CATEGORIAS(:datos, :categoria); END;';
+                $stmt = oci_parse($conn, $query);
+        
+                $cursor = oci_new_cursor($conn);
+        
+                oci_bind_by_name($stmt, ':datos', $cursor, -1, OCI_B_CURSOR);
+                oci_bind_by_name($stmt, ':categoria', $categoria);
+        
+                $success = oci_execute($stmt);
+        
+                if ($success) {
+                    oci_execute($cursor);
+                    $productos = [];
+                    while (($row = oci_fetch_assoc($cursor)) != false) {
+                        $productos[] = $row;
+                    }
+                    echo json_encode($productos);
+                } else {
+                    $error = oci_error($stmt);
+                    echo json_encode(['error' => 'Error al ejecutar el procedimiento: ' . $error['message']]);
+                }
+        
+                oci_free_statement($stmt);
+                oci_free_statement($cursor);
+                oci_close($conn);
+                break;
+        
+
+                case 'obtenerProductosPorCategoria':
+                    try {
+                        if (!isset($_POST['categoria'])) {
+                            throw new Exception('Categoría no especificada');
+                        }
+                
+                        $categoria = $_POST['categoria'];
+                
+                        $stmt = oci_parse($conn, "BEGIN PKG_LEGADO.SP_GET_PRODUCTOS_CATEGORIAS(:datos, :categoria); END;");
+                        $cursor = oci_new_cursor($conn);
+                
+                        oci_bind_by_name($stmt, ":datos", $cursor, -1, OCI_B_CURSOR);
+                        oci_bind_by_name($stmt, ":categoria", $categoria);
+                
+                        oci_execute($stmt);
+                        oci_execute($cursor);
+                
+                        $productos = [];
+                        while (($row = oci_fetch_assoc($cursor)) != false) {
+                            $productos[] = $row;
+                        }
+                
+                        echo json_encode($productos);
+                    } catch (Exception $e) {
+                        echo json_encode(['error' => $e->getMessage()]);
+                    }
+                    break;
+                
       
     default:
         $response = ['success' => false, 'message' => 'Acción no reconocida'];

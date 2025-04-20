@@ -10,6 +10,12 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("✅ DOM completamente cargado.");
 
 
+    $(document).on('click', '#btnTodosProductos', function(){
+        let contenedor = $("#contenedor-productos");
+            contenedor.empty();
+        obtenerProductos();
+    });
+
     obtenerProductos();
   
     getCarrito();

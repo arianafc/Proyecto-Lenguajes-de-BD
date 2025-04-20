@@ -108,15 +108,7 @@ function incluir_footer()
         <div class="footer-divider"></div>
 
         <div class="footer-content">
-            <div class="footer-section">
-                <h3>Productos</h3>
-                <ul>
-                    <li><a href="productos.php?categoria=hamburguesas">Hamburguesas</a></li>
-                    <li><a href="productos.php?categoria=postres">Postres</a></li>
-                    <li><a href="productos.php?categoria=sandwich">Sandwich</a></li>
-                </ul>
-            </div>
-
+           
             <div class="footer-section">
                 <h3>Nosotros</h3>
                 <ul>
@@ -124,6 +116,10 @@ function incluir_footer()
                     <li><a href="nosotros.php?seccion=vision">Visión</a></li>
                     <li><a href="nosotros.php?seccion=quienes-somos">¿Quiénes somos?</a></li>
                 </ul>
+            </div>
+            <div class="footer-section">
+                <h3><a href="productos.php" style="text-decoration: none; color: white">Productos</a></h3>
+
             </div>
 
             <div class="footer-section">

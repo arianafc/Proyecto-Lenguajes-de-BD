@@ -18,28 +18,36 @@ require_once 'fragmentos.php';
     <link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <?php incluir_css(); ?>
+    <?php incluir_css(); ?>
     <script src="js/java.js"></script>
+    <script src="js/productos.js"></script>
     <script src="js/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
-<?php incluir_navbar(); ?>
+    <?php incluir_navbar(); ?>
     <main>
- <section>
-    
-    <hr>
-    <h1 class="productosHP text-center">NUESTROS PRODUCTOS</h3>
-    <section class="products-section">
-        <div class="container" id="contenedor-productos">
+    <section class="productos-wrapper">
+        <hr>
+        <h1 class="productosHP text-center mb-4">NUESTROS PRODUCTOS</h1>
+
+        <!-- Filtros -->
+        <div id="filtros-categorias" class="d-flex justify-content-center flex-wrap gap-2 mb-4">
             
+        </div>
+
+        <!-- Productos -->
+        <section class="products-section">
+            <div class="container d-flex flex-wrap justify-content-center gap-4" id="contenedor-productos">
+             
+            </div>
+        </section>
+
+        <br>
+        <hr>
     </section>
- </section>
- <br>
-<hr>
+</main>
 
-
-    </main>
 
     <?php incluir_footer(); ?>
 </body>
