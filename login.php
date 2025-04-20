@@ -129,7 +129,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="createAccount">¿Olvidaste tu usuario?<a href="recuperarUsuario.php"> Recuperar Usuario</a></label>
                 <hr>
             </div>
-          
+            <div class="createAccount text-center">
+            <label for="createAccount">¿Olvidaste tu contraseña?<a href="recuperarPassword.php"> Actualizar Contraseña</a></label>
+                <hr>
+            </div>
             <hr>
 
             <button type="submit">Ingresar</button>
