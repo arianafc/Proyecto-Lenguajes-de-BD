@@ -8,15 +8,24 @@ if (!isset($_POST['action'])) {
     exit;
 }
 
+// Validar si la sesión está activa
+if (!isset($_SESSION['id']) || !isset($_SESSION['id_carrito'])) {
+    echo json_encode(["error" => "Necesitas iniciar sesión para ver/agregar cosas a tu carrito."]);
+    exit;
+}
+
 $id = $_SESSION['id'];
-$action = $_POST['action'];
 $carrito = $_SESSION['id_carrito'];
+$action = $_POST['action'];
 
 switch ($action) {
-    case 'getCarrito':
-        if (!isset($_SESSION['id_carrito'])) {
     
-            die(json_encode(["error" => "El usuario no tiene un carrito activo."]));
+
+
+    case 'getCarrito':
+        if (!isset($_SESSION['id'])) {
+            echo json_encode(["error" => "Necesitas iniciar sesión para ver tu carrito."]);
+            exit;
         } else {
             $idCarrito = $_SESSION['id_carrito'];
         
@@ -25,19 +34,19 @@ switch ($action) {
         
             $cursor = oci_new_cursor($conn);
         
-        
             oci_bind_by_name($stmt, ":cursor", $cursor, -1, OCI_B_CURSOR);
             oci_bind_by_name($stmt, ":id", $idCarrito, -1, SQLT_INT);
         
             if (!oci_execute($stmt)) {
                 $error = oci_error($stmt);
-                die(json_encode(["error" => "Error al ejecutar procedimiento", "detalle" => $error['message']]));
+                echo json_encode(["error" => "Error al ejecutar procedimiento", "detalle" => $error['message']]);
+                exit;
             }
-        
         
             if (!oci_execute($cursor)) {
                 $error = oci_error($cursor);
-                die(json_encode(["error" => "Error al ejecutar cursor", "detalle" => $error['message']]));
+                echo json_encode(["error" => "Error al ejecutar cursor", "detalle" => $error['message']]);
+                exit;
             }
         
             $carrito = [];
@@ -51,6 +60,7 @@ switch ($action) {
             oci_free_statement($cursor);
             oci_close($conn);
         }
+        
         
         break;
 

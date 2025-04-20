@@ -18,6 +18,7 @@ require_once 'fragmentos.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <?php incluir_css(); ?>
     <script src="js/carrito.js"></script>
+    <script src="js/vistaCarrito.js"></script>
     <script src="js/java.js"></script>
   
 </head>

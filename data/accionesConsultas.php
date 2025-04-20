@@ -14,6 +14,11 @@ if (!isset($_POST['action'])) {
     exit;
 }
 
+// Validar si la sesión está activa
+if (!isset($_SESSION['id']) || !isset($_SESSION['id_carrito'])) {
+    echo json_encode(["error" => "Necesitas iniciar sesión realizar acción."]);
+    exit;
+}
 $id = $_SESSION['id'];
 $action = $_POST['action'];
 
