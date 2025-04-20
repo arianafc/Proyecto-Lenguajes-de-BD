@@ -2,7 +2,9 @@
 
 session_start();
 require '../conexion.php';
-
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(0);
 if (!isset($_POST['action'])) {
     echo json_encode(["error" => "No se recibió ninguna acción"]);
     exit;
@@ -269,18 +271,30 @@ switch ($action) {
                     
                         if (!oci_execute($stmt)) {
                             $error = oci_error($stmt);
-                            echo json_encode(["error" => "Error al actualizar información", "detalle" => $error['message']]);
+                            $mensajeError = $error['message'];
+                    
+                            if (str_contains($mensajeError, 'ORA-20003')) {
+                                echo json_encode(["error" => "El correo electrónico ya está registrado por otro usuario."]);
+                            } else {
+                                echo json_encode(["error" => "Error al actualizar información.", "detalle" => $mensajeError]);
+                            }
+                    
+                            oci_free_statement($stmt);
+                            oci_close($conn);
                             exit;
                         }
                     
                         oci_free_statement($stmt);
                         oci_close($conn);
                     
-                        echo json_encode(["success" => "Información actualizada correctamente."]);
+                        // Actualizar sesión solo si todo salió bien
                         $_SESSION['nombre'] = $nombre;
                         $_SESSION['correo'] = $email;
-                        //actualizamos los datos del session
+                    
+                        echo json_encode(["success" => "Información actualizada correctamente."]);
                         break;
+                    
+                    
                         case 'obtenerDireccionesUsuario':
                             if (!isset($_SESSION['id'])) {
                                 echo json_encode(["error" => "No has iniciado sesión."]);

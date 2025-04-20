@@ -72,43 +72,43 @@ require_once 'fragmentos.php';
                 </form>
                 <hr>
                 <div class="row">
-                <div class="table-responsive col-md-6">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Dirección</th>
-                                <th>Provincia</th>
-                                <th>Cantón</th>
-                                <th>Distrito</th>
-                                <th>Acciones</th>
-                            </tr>
-                           
-                       
-                        </thead>
-                        <tbody id="tablaDirecciones">
-                        </tbody>
-                       
-                        
-                    </table>
-                    <button class="btn btn-primary" id="btnAgregarDireccion">Agregar dirección</button>
-                </div>
-                <div class="table-responsive col-md-6">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Teléfono</th>
-                                <th>Acciones</th>
-                            </tr>
-                           
-                       
-                        </thead>
-                        <tbody id="tablaTelefonos">
-                        </tbody>
-                       
-                        
-                    </table>
-                    <button class="btn btn-primary" id="btnAgregarTelefono">Agregar Teléfono</button>
-                </div>
+                    <div class="table-responsive col-md-6">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Dirección</th>
+                                    <th>Provincia</th>
+                                    <th>Cantón</th>
+                                    <th>Distrito</th>
+                                    <th>Acciones</th>
+                                </tr>
+
+
+                            </thead>
+                            <tbody id="tablaDirecciones">
+                            </tbody>
+
+
+                        </table>
+                        <button class="btn btn-primary" id="btnAgregarDireccion">Agregar dirección</button>
+                    </div>
+                    <div class="table-responsive col-md-6">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Teléfono</th>
+                                    <th>Acciones</th>
+                                </tr>
+
+
+                            </thead>
+                            <tbody id="tablaTelefonos">
+                            </tbody>
+
+
+                        </table>
+                        <button class="btn btn-primary" id="btnAgregarTelefono">Agregar Teléfono</button>
+                    </div>
                 </div>
 
             </div>
@@ -159,23 +159,26 @@ require_once 'fragmentos.php';
         };
 
         $.post('./data/accionesPerfil.php', datos, function (respuesta) {
-            let r = {};
             try {
-                r = JSON.parse(respuesta);
-            } catch (e) {
-                Swal.fire("Error", "Respuesta no válida del servidor.", "error");
-                return;
-            }
+                const r = JSON.parse(respuesta);
 
-            if (r.success) {
-                Swal.fire("¡Éxito!", r.success, "success");
-                location.reload();
-            } else if (r.error) {
-                Swal.fire("Error", r.error, "error");
+                if (r.success) {
+                    Swal.fire("¡Éxito!", r.success, "success").then(() => location.reload());
+                } else if (r.error) {
+                    Swal.fire("Error", r.error, "error");
+                } else {
+                    Swal.fire("Error", "Ocurrió un error inesperado.", "error");
+                }
+
+            } catch (e) {
+                console.error("Respuesta no válida del servidor:", respuesta);
+                Swal.fire("Error", "Ocurrió un error inesperado. Por favor intenta más tarde.", "error");
             }
         }).fail(function () {
             Swal.fire("Error", "No se pudo conectar al servidor.", "error");
         });
+
+
     });
 
     /////////////////////////////////////#apellido1
