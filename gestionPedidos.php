@@ -1,8 +1,51 @@
+<?php
+require_once 'conexion.php';
+
+// Cancelar pedido
+if (isset($_POST['btn_cancelar'])) {
+    $idCancelar = $_POST['id_cancelar'];
+    $nuevo_estado = 8; // CANCELADO
+
+    $stmtCancel = oci_parse($conn, "BEGIN PKG_LEGADO.ACTUALIZAR_ESTADO_PEDIDO(:id_pedido, :nuevo_estado); END;");
+    oci_bind_by_name($stmtCancel, ":id_pedido", $idCancelar);
+    oci_bind_by_name($stmtCancel, ":nuevo_estado", $nuevo_estado);
+
+    if (oci_execute($stmtCancel)) {
+        oci_free_statement($stmtCancel);
+        header("Location: gestionPedidos.php");
+        exit();
+    } else {
+        $e = oci_error($stmtCancel);
+        $error_cancelar = "Error al cancelar pedido: " . htmlentities($e['message'], ENT_QUOTES);
+        oci_free_statement($stmtCancel);
+    }
+}
+
+// Actualizar estado
+if (isset($_POST['btn_estado'])) {
+    $id = $_POST['id_pedido'];
+    $nuevo_estado = $_POST['nuevo_estado'];
+
+    $stmtUpdate = oci_parse($conn, "BEGIN PKG_LEGADO.ACTUALIZAR_ESTADO_PEDIDO(:id, :nuevo_estado); END;");
+    oci_bind_by_name($stmtUpdate, ":id", $id);
+    oci_bind_by_name($stmtUpdate, ":nuevo_estado", $nuevo_estado);
+
+    if (oci_execute($stmtUpdate)) {
+        oci_free_statement($stmtUpdate);
+        header("Location: gestionPedidos.php");
+        exit();
+    } else {
+        $e = oci_error($stmtUpdate);
+        $error_estado = "Error al actualizar estado: " . htmlentities($e['message'], ENT_QUOTES);
+        oci_free_statement($stmtUpdate);
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <?php
 require_once 'fragmentos.php';
-require_once 'conexion.php';
 ?>
 <head>
     <meta charset="UTF-8">
@@ -60,10 +103,10 @@ $colores_estado = [
     'NUEVO' => 'secondary', 
     'EN PROCESO' => 'warning', 
     'EN CAMINO' => 'primary',
-    'ENTREGADO' => 'success'
+    'ENTREGADO' => 'success',
+    'CANCELADO' => 'danger'
 ];
 
-// Usamos el cursor de obtener pedidos
 $query = "BEGIN PKG_LEGADO.OBTENER_PEDIDOS(:cursor_pedidos); END;";
 $stmt = oci_parse($conn, $query);
 $cursor = oci_new_cursor($conn);
@@ -77,7 +120,7 @@ if (oci_execute($stmt)) {
         echo "<td>" . htmlspecialchars($row['FECHA']) . "</td>";
         echo "<td>" . htmlspecialchars($row['NOMBRE_CLIENTE']) . "</td>";
 
-        $estado = $row['ESTADO'];  // Estado ya es la descripción
+        $estado = $row['ESTADO'];
         $color = $colores_estado[$estado] ?? "secondary";
         echo "<td><span class='badge bg-$color'>" . htmlspecialchars($estado) . "</span></td>";
 
@@ -87,11 +130,13 @@ if (oci_execute($stmt)) {
         echo "<td>";
         if ($estado == 'ENTREGADO') {
             echo "<span class='text-success fs-4' title='Entregado'><i class='fas fa-check-circle'></i></span>";
+        } elseif ($estado == 'CANCELADO') {
+            echo "<span class='text-danger fs-4' title='Cancelado'><i class='fas fa-times-circle'></i></span>";
         } else {
-            echo "<form method='POST' style='display:inline-block;' onsubmit=\"return confirmarCancelacion(event)\">
+            echo "<form method='POST' style='display:inline-block;'>
                     <input type='hidden' name='id_cancelar' value='" . $row['ID_PEDIDO'] . "'>
                     <button type='submit' class='btn btn-danger btn-sm' name='btn_cancelar'>Cancelar</button>
-                  </form>";
+                </form>";
 
             if (isset($estado_siguiente[$estado])) {
                 $nuevo_estado = $estado_siguiente[$estado];
@@ -99,7 +144,7 @@ if (oci_execute($stmt)) {
                         <input type='hidden' name='id_pedido' value='" . $row['ID_PEDIDO'] . "'>
                         <input type='hidden' name='nuevo_estado' value='" . $nuevo_estado . "'>
                         <button type='submit' class='btn btn-primary btn-sm' name='btn_estado'>Actualizar Estado</button>
-                      </form>";
+                    </form>";
             }
         }
         echo "</td>";
@@ -109,43 +154,9 @@ if (oci_execute($stmt)) {
     $e = oci_error($stmt);
     echo "<tr><td colspan='7'>Error: " . htmlentities($e['message'], ENT_QUOTES) . "</td></tr>";
 }
+
 oci_free_statement($stmt);
 oci_free_cursor($cursor);
-
-// Cancelar pedido
-if (isset($_POST['btn_cancelar'])) {
-    $idCancelar = $_POST['id_cancelar'];
-    $stmtCancel = oci_parse($conn, "BEGIN PKG_LEGADO.ELIMINAR_PEDIDO(:id_pedido); END;");
-    oci_bind_by_name($stmtCancel, ":id_pedido", $idCancelar);
-    if (oci_execute($stmtCancel)) {
-        echo "<script>location.reload();</script>";
-    } else {
-        $e = oci_error($stmtCancel);
-        echo "<div class='alert alert-danger'>Error al cancelar pedido: " . htmlentities($e['message'], ENT_QUOTES) . "</div>";
-    }
-    oci_free_statement($stmtCancel);
-}
-
-// Actualizar estado del pedido
-if (isset($_POST['btn_estado'])) {
-    $id = $_POST['id_pedido'];
-    $nuevo_estado = $_POST['nuevo_estado'];
-
-    // Se utiliza el procedimiento ACTUALIZAR_ESTADO_PEDIDO
-    $stmtUpdate = oci_parse($conn, "BEGIN PKG_LEGADO.ACTUALIZAR_ESTADO_PEDIDO(:id, :nuevo_estado); END;");
-    oci_bind_by_name($stmtUpdate, ":id", $id);
-    oci_bind_by_name($stmtUpdate, ":nuevo_estado", $nuevo_estado);
-
-    if (oci_execute($stmtUpdate)) {
-        // Redirigir a la misma página para evitar la recarga infinita
-        echo "<script>window.location.href = window.location.href;</script>";
-    } else {
-        $e = oci_error($stmtUpdate);
-        echo "<div class='alert alert-danger'>Error al actualizar estado: " . htmlentities($e['message'], ENT_QUOTES) . "</div>";
-    }
-
-    oci_free_statement($stmtUpdate);
-}
 ?>
                             </tbody>
                         </table>
@@ -166,23 +177,7 @@ if (isset($_POST['btn_estado'])) {
             document.getElementById("dropdownMenu").classList.remove("active");
         }
     });
-
-    function confirmarCancelacion(event) {
-        event.preventDefault();
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: "El pedido será cancelado.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, cancelar',
-            cancelButtonText: 'No, volver',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                event.target.submit();
-            }
-        });
-        return false;
-    }
 </script>
 </body>
 </html>
+
