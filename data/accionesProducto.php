@@ -11,26 +11,6 @@ $action = $_POST['action'] ?? null;
 $response = ['success' => false, 'message' => 'Acción no válida'];
 
 switch ($action) {
-    case 'obtenerCategorias':
-        try {
-            $stmt = oci_parse($conn, "BEGIN PKG_LEGADO.SP_GET_CATEGORIAS(:datos); END;");
-            
-            $cursor = oci_new_cursor($conn);
-            oci_bind_by_name($stmt, ":datos", $cursor, -1, OCI_B_CURSOR);
-            
-            oci_execute($stmt);
-            oci_execute($cursor);
-            
-            $categorias = [];
-            while (($row = oci_fetch_assoc($cursor)) != false) {
-                $categorias[] = $row;
-            }
-        
-            echo json_encode($categorias);
-        } catch (Exception $e) {
-            echo json_encode(['error' => $e->getMessage()]);
-        }
-        break;
 
         case 'agregar':
             $nombre = $_POST['nombre'] ?? '';
@@ -92,8 +72,7 @@ switch ($action) {
                 $id_estado = (int)($_POST['id_estado'] ?? 0);
                 $id = (int)($_POST['id'] ?? 0);
                 $imagenRutaFinal = $_POST['imagenActual'] ?? '';
-            
-                // ¿Hay una nueva imagen?
+
                 if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                     $extension = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
                     $nombreArchivo = $nombre . '.' . uniqid('img_') . '.' . $extension;
@@ -108,8 +87,7 @@ switch ($action) {
                         $response = ['success' => false, 'message' => 'Error al mover la imagen al servidor.'];
                         break;
                     }
-            
-                    // usar nueva imagen si fue cargada correctamente
+        
                     $imagenRutaFinal = $rutaDestino;
                 }
             

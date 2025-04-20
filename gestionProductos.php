@@ -96,6 +96,7 @@ $productos = listarProductos($conn);
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="js/java.js"></script>
+    <script src="js/categorias.js"></script>
 
     <?php incluir_css() ?>
 </head>
@@ -210,6 +211,35 @@ $productos = listarProductos($conn);
                         </table>
                     </div>
                 </div>
+
+<hr>
+                <div class="mb-3">
+                    <button id="btnAgregarCategoria" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Agregar Categoría
+                    </button>
+                </div>
+
+                <div class="row card p-5">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaCategorias">
+                        
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+
+
             </main>
         </div>
     </div>
@@ -237,7 +267,7 @@ $productos = listarProductos($conn);
                 showCancelButton: true,
                 confirmButtonText: 'Guardar',
                 didOpen: () => {
-                    $.post('data/accionesProducto.php', { action: 'obtenerCategorias' }, function (categorias) {
+                    $.post('data/accionesCategorias.php', { action: 'obtenerCategorias' }, function (categorias) {
                         const select = document.getElementById('swal-categoria');
                         categorias.forEach(cat => {
                             const option = document.createElement('option');
