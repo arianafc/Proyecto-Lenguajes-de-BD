@@ -70,7 +70,7 @@ require_once 'fragmentos.php';
         }, function (data) {
             let respuesta = {};
             try {
-                respuesta = JSON.parse(data);
+                respuesta = data;
             } catch (e) {
                 Swal.fire("Error", "Respuesta no válida del servidor.", "error");
                 return;

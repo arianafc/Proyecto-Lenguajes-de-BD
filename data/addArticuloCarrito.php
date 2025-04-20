@@ -8,36 +8,45 @@ if (!isset($_POST['action'])) {
     exit;
 }
 
+// Validar si la sesión está activa
+if (!isset($_SESSION['id']) || !isset($_SESSION['id_carrito'])) {
+    echo json_encode(["error" => "Necesitas iniciar sesión para ver/agregar cosas a tu carrito."]);
+    exit;
+}
+
 $id = $_SESSION['id'];
-$action = $_POST['action'];
 $carrito = $_SESSION['id_carrito'];
+$action = $_POST['action'];
 
 switch ($action) {
-    case 'getCarrito':
-        if (!isset($_SESSION['id_carrito'])) {
     
-            die(json_encode(["error" => "El usuario no tiene un carrito activo."]));
+
+
+    case 'getCarrito':
+        if (!isset($_SESSION['id'])) {
+            echo json_encode(["error" => "Necesitas iniciar sesión para ver tu carrito."]);
+            exit;
         } else {
             $idCarrito = $_SESSION['id_carrito'];
         
-            $sql = "BEGIN PKG_CARRITO.SP_GET_CARRITO_USUARIO(:cursor, :id); END;";
+            $sql = "BEGIN PKG_LEGADO.SP_GET_CARRITO_USUARIO(:cursor, :id); END;";
             $stmt = oci_parse($conn, $sql);
         
             $cursor = oci_new_cursor($conn);
-        
         
             oci_bind_by_name($stmt, ":cursor", $cursor, -1, OCI_B_CURSOR);
             oci_bind_by_name($stmt, ":id", $idCarrito, -1, SQLT_INT);
         
             if (!oci_execute($stmt)) {
                 $error = oci_error($stmt);
-                die(json_encode(["error" => "Error al ejecutar procedimiento", "detalle" => $error['message']]));
+                echo json_encode(["error" => "Error al ejecutar procedimiento", "detalle" => $error['message']]);
+                exit;
             }
-        
         
             if (!oci_execute($cursor)) {
                 $error = oci_error($cursor);
-                die(json_encode(["error" => "Error al ejecutar cursor", "detalle" => $error['message']]));
+                echo json_encode(["error" => "Error al ejecutar cursor", "detalle" => $error['message']]);
+                exit;
             }
         
             $carrito = [];
@@ -51,6 +60,7 @@ switch ($action) {
             oci_free_statement($cursor);
             oci_close($conn);
         }
+        
         
         break;
 
@@ -70,7 +80,7 @@ switch ($action) {
 
         $idCarrito = $_SESSION['id_carrito'];
 
-        $sql = "BEGIN PKG_CARRITO.SP_AGREGAR_ARTICULO_CARRITO (:idCarrito, :idProducto, :cantidad); END;";
+        $sql = "BEGIN PKG_LEGADO.SP_AGREGAR_ARTICULO_CARRITO (:idCarrito, :idProducto, :cantidad); END;";
         $stmt = oci_parse($conn, $sql);
 
         oci_bind_by_name($stmt, ":idCarrito", $idCarrito, -1, SQLT_INT);
@@ -103,7 +113,7 @@ switch ($action) {
 
         $idCarrito = $_SESSION['id_carrito'];
 
-        $sql = "BEGIN PKG_CARRITO.SP_ELIMINAR_ARTICULO_CARRITO (:idProducto); END;";
+        $sql = "BEGIN PKG_LEGADO.SP_ELIMINAR_ARTICULO_CARRITO (:idProducto); END;";
         $stmt = oci_parse($conn, $sql);
 
 
@@ -135,7 +145,7 @@ switch ($action) {
 
         $idCarrito = $_SESSION['id_carrito'];
         $cantidad = $_POST['cantidad'];
-        $sql = "BEGIN PKG_CARRITO.SP_EDITAR_ARTICULO_CARRITO (:idArticulo, :cantidad); END;";
+        $sql = "BEGIN PKG_LEGADO.SP_EDITAR_ARTICULO_CARRITO (:idArticulo, :cantidad); END;";
         $stmt = oci_parse($conn, $sql);
 
 
@@ -163,7 +173,7 @@ switch ($action) {
         }
 
         $metodo = $_POST['metodo'];
-        $sql = "BEGIN PKG_CHECKOUT.SP_EJECUTAR_CHECKOUT(:carrito, :idUsuario, :metodoPago); END;";
+        $sql = "BEGIN PKG_LEGADO.SP_EJECUTAR_CHECKOUT(:carrito, :idUsuario, :metodoPago); END;";
         $stmt = oci_parse($conn, $sql);
 
 
@@ -192,7 +202,7 @@ switch ($action) {
         $carrito_id = $_SESSION['id_carrito'];
         $total = 0;
 
-        $stid = oci_parse($conn, "BEGIN :resultado := PKG_CARRITO.FN_CONTAR_ARTICULOS_CARRITO(:id_carrito); END;");
+        $stid = oci_parse($conn, "BEGIN :resultado := PKG_LEGADO.FN_CONTAR_ARTICULOS_CARRITO(:id_carrito); END;");
         oci_bind_by_name($stid, ":resultado", $total, 10);
         oci_bind_by_name($stid, ":id_carrito", $carrito_id);
 

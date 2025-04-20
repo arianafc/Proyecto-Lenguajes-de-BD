@@ -4,11 +4,21 @@ session_start();
 require '../conexion.php';
 
 
+error_reporting(E_ERROR); 
+ini_set('display_errors', 0);
+header('Content-Type: application/json');
+ob_start();
+
 if (!isset($_POST['action'])) {
     echo json_encode(["error" => "No se recibió ninguna acción"]);
     exit;
 }
 
+// Validar si la sesión está activa
+if (!isset($_SESSION['id']) || !isset($_SESSION['id_carrito'])) {
+    echo json_encode(["error" => "Necesitas iniciar sesión realizar acción."]);
+    exit;
+}
 $id = $_SESSION['id'];
 $action = $_POST['action'];
 
@@ -119,7 +129,44 @@ switch ($action) {
         oci_free_statement($cursor);
         oci_close($conn);
         break;
-
+        case 'obtenerConsultas':
+            try {
+                $stmt = oci_parse($conn, "BEGIN PKG_LEGADO.SP_GET_CONSULTAS(:cursor); END;");
+                $cursor = oci_new_cursor($conn);
+        
+                oci_bind_by_name($stmt, ":cursor", $cursor, -1, OCI_B_CURSOR);
+        
+                oci_execute($stmt);
+                oci_execute($cursor);
+        
+                $consultas = [];
+                while (($row = oci_fetch_assoc($cursor)) != false) {
+                    $consultas[] = $row;
+                }
+        
+                echo json_encode($consultas);
+            } catch (Exception $e) {
+                echo json_encode(['error' => $e->getMessage()]);
+            }
+            break;
+        
+            case 'actualizarEstadoConsulta':
+                try {
+                    $idConsulta = $_POST['id'];
+                    $accion = $_POST['accion']; // 1 = Contestada, cualquier otro = Pendiente
+            
+                    $stmt = oci_parse($conn, "BEGIN PKG_LEGADO.SP_CRUD_CONSULTAS(:accion, :id); END;");
+                    oci_bind_by_name($stmt, ":accion", $accion);
+                    oci_bind_by_name($stmt, ":id", $idConsulta);
+            
+                    oci_execute($stmt);
+            
+                    echo json_encode(['success' => true, 'mensaje' => 'Consulta actualizada correctamente.']);
+                } catch (Exception $e) {
+                    echo json_encode(['error' => $e->getMessage()]);
+                }
+                break;
+            
 
     default:
         echo json_encode(["error" => "Acción no válida"]);

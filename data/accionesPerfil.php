@@ -2,7 +2,9 @@
 
 session_start();
 require '../conexion.php';
-
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(0);
 if (!isset($_POST['action'])) {
     echo json_encode(["error" => "No se recibió ninguna acción"]);
     exit;
@@ -269,19 +271,72 @@ switch ($action) {
                     
                         if (!oci_execute($stmt)) {
                             $error = oci_error($stmt);
-                            echo json_encode(["error" => "Error al actualizar información", "detalle" => $error['message']]);
+                            $mensajeError = $error['message'];
+                    
+                            if (str_contains($mensajeError, 'ORA-20003')) {
+                                echo json_encode(["error" => "El correo electrónico ya está registrado por otro usuario."]);
+                            } else {
+                                echo json_encode(["error" => "Error al actualizar información.", "detalle" => $mensajeError]);
+                            }
+                    
+                            oci_free_statement($stmt);
+                            oci_close($conn);
                             exit;
                         }
                     
                         oci_free_statement($stmt);
                         oci_close($conn);
                     
-                        echo json_encode(["success" => "Información actualizada correctamente."]);
+                        // Actualizar sesión solo si todo salió bien
                         $_SESSION['nombre'] = $nombre;
                         $_SESSION['correo'] = $email;
-                        //actualizamos los datos del session
+                    
+                        echo json_encode(["success" => "Información actualizada correctamente."]);
                         break;
                     
+                    
+                        case 'obtenerDireccionesUsuario':
+                            if (!isset($_SESSION['id'])) {
+                                echo json_encode(["error" => "No has iniciado sesión."]);
+                                exit;
+                            }
+                        
+                            $idUsuario = $_SESSION['id'];
+                        
+                            $sql = "BEGIN PKG_LEGADO.SP_GET_DIRECCIONES_USUARIO(:cursor, :idUsuario); END;";
+                            $stmt = oci_parse($conn, $sql);
+                            $cursor = oci_new_cursor($conn);
+                        
+                            oci_bind_by_name($stmt, ":idUsuario", $idUsuario, -1, SQLT_INT);
+                            oci_bind_by_name($stmt, ":cursor", $cursor, -1, OCI_B_CURSOR);
+                        
+                            if (!oci_execute($stmt)) {
+                                $error = oci_error($stmt);
+                                echo json_encode(["error" => "Error al ejecutar procedimiento", "detalle" => $error['message']]);
+                                exit;
+                            }
+                        
+                            if (!oci_execute($cursor)) {
+                                $error = oci_error($cursor);
+                                echo json_encode(["error" => "Error al obtener datos del cursor", "detalle" => $error['message']]);
+                                exit;
+                            }
+                        
+                            $direcciones = [];
+                            while ($row = oci_fetch_assoc($cursor)) {
+                                $direcciones[] = $row;
+                            }
+                        
+                            if (empty($direcciones)) {
+                                echo json_encode(["error" => "No tienes direcciones registradas."]);
+                            } else {
+                                echo json_encode($direcciones);
+                            }
+                        
+                            oci_free_statement($stmt);
+                            oci_free_statement($cursor);
+                            oci_close($conn);
+                            break;
 
     default:
         echo json_encode(["error" => "Acción no válida"]);

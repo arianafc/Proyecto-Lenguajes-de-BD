@@ -60,13 +60,12 @@ body {
 }
 
 .login-container .createAccount {
-    font-size: 12px;
+    font-size: 15px;
     color: #666;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 15px 0;
-    margin-top: 50px;
+
 }
 
 .back-btn {
@@ -85,4 +84,60 @@ body {
     margin-top: 5px;
     text-align: left;
     padding-left: 10px;
+}
+
+.registro-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 40px;
+    border-radius: 10px;
+    width: 450px;
+    text-align: center;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.registro-container img {
+    width: 80px;
+    margin-bottom: 10px;
+}
+
+.registro-container h2 {
+    font-size: 18px;
+    color: #333;
+    margin: 10px 0 20px;
+}
+
+.registro-container input[type="text"],
+.registro-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.registro-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #FFA500;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.registro-container button:hover {
+    background-color: #FF8C00;
+}
+
+.registro-container .createAccount {
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0;
+    margin-top: 50px;
 }

@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 0);
-ini_set('log_errors', 1);     
-error_reporting(E_ALL);       
+ini_set('log_errors', 1);
+error_reporting(E_ALL);
 
 session_start();
 include 'conexion.php';
@@ -13,10 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $apellido1 = $_POST['apellido1'] ?? '';
     $apellido2 = $_POST['apellido2'] ?? '';
     $email = $_POST['email'] ?? '';
-    $id_estado = (int)($_POST['id_estado'] ?? 1);
+    $id_estado = (int) ($_POST['id_estado'] ?? 1);
     $username = $_POST['username'] ?? '';
     $contrasena = $_POST['contrasena'] ?? '';
-    $id_rol = (int)($_POST['id_rol'] ?? 1); 
+    $id_rol = (int) ($_POST['id_rol'] ?? 1);
 
     // Validaciones
     if (empty($nombre) || empty($apellido1) || empty($apellido2) || empty($email) || empty($username) || empty($contrasena)) {
@@ -79,15 +79,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Cuenta - El Legado</title>
     <link rel="stylesheet" href="css/login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
-    <div class="login-container">
+    <div class="registro-container">
 
         <img src="/LenguajesBD-Proyecto/Proyecto-Lenguajes-de-BD/img/familia.png" alt="Logo el Legado">
 
@@ -101,34 +110,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <!-- Formulario de registro -->
-        <form method="POST" action="">
-          
-            <input type="text" name="nombre" placeholder="Nombre" required 
-                   value="<?php echo isset($nombre) ? htmlspecialchars($nombre) : ''; ?>">
-
-            <input type="text" name="apellido1" placeholder="Primer Apellido" required 
-                   value="<?php echo isset($apellido1) ? htmlspecialchars($apellido1) : ''; ?>">
-
-            <input type="text" name="apellido2" placeholder="Segundo Apellido" required
-                   value="<?php echo isset($apellido2) ? htmlspecialchars($apellido2) : ''; ?>">
-
-            <input type="email" name="email" placeholder="Correo electrónico" required 
-                   value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>">
-
-            <input type="text" name="username" placeholder="Nombre de usuario" required 
-                   value="<?php echo isset($username) ? htmlspecialchars($username) : ''; ?>">
-
-            <input type="password" name="contrasena" placeholder="Contraseña" required>
-            <div class="password-requirements">
-                La contraseña debe tener al menos 10 caracteres e incluir letras y números.
+        <form method="POST" action="" class="container p-4 bg-white shadow rounded"
+            style=" backdrop-filter: blur(10px);">
+        
+            <div class="mb-3">
+                <input type="text" name="nombre" class="form-control" placeholder="Nombre" required
+                    value="<?php echo isset($nombre) ? htmlspecialchars($nombre) : ''; ?>">
             </div>
 
-            <button type="submit">Crear cuenta</button>
+            <div class="mb-3">
+                <input type="text" name="apellido1" class="form-control" placeholder="Primer Apellido" required
+                    value="<?php echo isset($apellido1) ? htmlspecialchars($apellido1) : ''; ?>">
+            </div>
 
-            <button type="button" class="back-btn" onclick="window.location.href='/LenguajesBD-Proyecto/Proyecto-Lenguajes-de-BD/login.php'">
-                Volver al inicio de sesión
-            </button>
+            <div class="mb-3">
+                <input type="text" name="apellido2" class="form-control" placeholder="Segundo Apellido" required
+                    value="<?php echo isset($apellido2) ? htmlspecialchars($apellido2) : ''; ?>">
+            </div>
+
+            <div class="mb-3">
+                <input type="email" name="email" class="form-control" placeholder="Correo electrónico" required
+                    value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>">
+            </div>
+
+            <div class="mb-3">
+                <input type="text" name="username" class="form-control" placeholder="Nombre de usuario" required
+                    value="<?php echo isset($username) ? htmlspecialchars($username) : ''; ?>">
+            </div>
+
+            <div class="mb-2">
+                <input type="password" name="contrasena" class="form-control" placeholder="Contraseña" required>
+            </div>
+
+            <div class="form-text text-center mb-3" style="font-size: 0.85rem;">
+                La contraseña debe tener al menos <strong>10 caracteres</strong> e incluir <strong>letras y
+                    números</strong>.
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-warning fw-bold text-white">Crear cuenta</button>
+                <hr>
+                <button type="button" class="btn btn-outline-warning fw-bold"
+                    onclick="window.location.href='login.php'">
+                    Volver al inicio de sesión
+                </button>
+            </div>
         </form>
+
     </div>
 </body>
+
 </html>
