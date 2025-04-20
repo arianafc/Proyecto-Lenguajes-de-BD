@@ -70,35 +70,6 @@ function obtenerRoles($conn) {
     return $roles;
 }
 
-/**
- * Obtiene los datos de un usuario específico
- * @param int $id_usuario ID del usuario
- * @return array|bool Datos del usuario o false si no existe
- */
-function obtenerUsuarioPorId($conn, $id_usuario) {
-    // Preparar la llamada al SP OBTENER_USUARIO_POR_ID
-    $sql = "BEGIN SP_OBTENER_USUARIO_POR_ID(:id_usuario, :cursor); END;";
-    $stmt = oci_parse($conn, $sql);
-    
-    // Parámetros
-    oci_bind_by_name($stmt, ':id_usuario', $id_usuario);
-    $cursor = oci_new_cursor($conn);
-    oci_bind_by_name($stmt, ":cursor", $cursor, -1, OCI_B_CURSOR);
-    
-    // Ejecutar
-    oci_execute($stmt);
-    oci_execute($cursor);
-    
-    // Obtener el resultado
-    $usuario = oci_fetch_assoc($cursor);
-    
-    // Liberar recursos
-    oci_free_statement($cursor);
-    oci_free_statement($stmt);
-    
-    return $usuario ?: false;
-}
-
 // Obtener la lista de usuarios y roles para la página
 $usuarios = listarUsuarios($conn);
 $roles = obtenerRoles($conn);

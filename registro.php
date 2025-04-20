@@ -21,8 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validaciones
     if (empty($nombre) || empty($apellido1) || empty($apellido2) || empty($email) || empty($username) || empty($contrasena)) {
         $error = "Por favor, complete todos los campos obligatorios.";
-    } elseif (!preg_match('/^(?=.*[A-Za-z])(?=.*\d).{10,}$/', $contrasena)) {
-        $error = "La contraseña debe tener al menos 10 caracteres e incluir letras y números.";
     } else {
         try {
             // Crear usuario
@@ -68,6 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = "El correo electrónico ya está registrado.";
             } elseif (strpos($mensajeError, 'ORA-20002') !== false) {
                 $error = "El nombre de usuario ya está registrado.";
+            } elseif (strpos($mensajeError, 'ORA-20003') !== false) {
+                $error = "La contraseña debe tener al menos 10 caracteres e incluir letras y números.";
             } else {
                 $error = "Ocurrió un error inesperado. Intente nuevamente más tarde.";
             }
