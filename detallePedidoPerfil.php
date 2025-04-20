@@ -49,20 +49,20 @@ require_once 'fragmentos.php';
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th># Pedido</th>
-                                    <th>Fecha</th>
-                                    <th>Método de Pago</th>
-                                    <th>Estado</th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
                                     <th>Total</th>
-                                    <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaPedidosUsuario">
+                            <tbody id="tablaDetallesPedidos">
                             </tbody>
                         </table>
             </div>
         </section>
 
+
+      
 
 
 
@@ -72,43 +72,53 @@ require_once 'fragmentos.php';
     <hr>
     <?php incluir_footer(); ?>
 </body>
+
 <script>
-     $(document).on('click', '.btnVerDetallePedido', function () {
-        console.log('hola');
-        const idPedido = $(this).data('id');
-        $.post('./data/accionesPerfil.php', { action: 'verDetallePedido', idPedido: idPedido }, function (response) {
-            let detalles = [];
-            
-            try {
-                detalles = JSON.parse(response);
-            } catch (e) {
-                alert("Error al procesar respuesta del servidor");
-                return;
-            }
-  
-            if (detalles.error) {
-                alert(detalles.error);
-                return;
-            }
-            console.log(detalles);
-            $('#tablaDetallesPedidos').empty();
-  
-            detalles.forEach(det => {
-                const fila = `
-                    <tr>
-                        <td>${det.PRODUCTO}</td>
-                        <td>${det.CANTIDAD}</td>
-                        <td>$${det.PRECIO}</td>
-                        <td>$${parseFloat(det.SUBTOTAL).toFixed(2)}</td>
-                    </tr>
-                `;
-                $('#tablaDetallesPedidos').append(fila);
-            });
+$(document).ready(function () {
     
-        
-            $('#tablaDetallesPedidos').closest('table').show();
+    const urlParams = new URLSearchParams(window.location.search);
+    const idPedido = urlParams.get('idPedido');
+
+    if (!idPedido) {
+        Swal.fire("Error", "No se proporcionó un ID de pedido válido.", "error");
+        return;
+    }
+
+    $.post('./data/accionesPerfil.php', { action: 'verDetallePedido', idPedido: idPedido }, function (respuesta) {
+        let data = [];
+
+        try {
+            data = JSON.parse(respuesta);
+        } catch (e) {
+            Swal.fire("Error", "Respuesta del servidor no válida.", "error");
+            return;
+        }
+
+        if (data.error) {
+            Swal.fire("Error", data.error, "error");
+            return;
+        }
+
+        if (data.length === 0) {
+            Swal.fire("Sin datos", "No se encontraron detalles para este pedido.", "info");
+            return;
+        }
+
+        $('#tablaDetallesPedidos').empty();
+
+        data.forEach(detalle => {
+            const fila = `
+                <tr>
+                    <td>${detalle.PRODUCTO}</td>
+                    <td>${detalle.CANTIDAD}</td>
+                    <td>${parseFloat(detalle.PRECIO).toLocaleString('es-CR')}</td>
+                    <td>${(detalle.PRECIO * detalle.CANTIDAD).toLocaleString('es-CR')}</td>
+                </tr>
+            `;
+            $('#tablaDetallesPedidos').append(fila);
         });
     });
-
+});
 </script>
+
 </html>

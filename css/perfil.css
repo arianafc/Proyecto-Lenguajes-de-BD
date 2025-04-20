@@ -1,0 +1,42 @@
+.links {
+    text-decoration: none;
+    color: white;
+}
+
+.links:hover  {
+    color: white;
+    transform: scale(1.5);
+}
+
+.perfil {
+
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.perfil input, .contact-form textarea {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.perfil button {
+    background-color: #00211A;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.perfil button:hover {
+    background-color: #005f46;
+}

@@ -15,6 +15,9 @@ require_once 'fragmentos.php';
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
     <?php incluir_css(); ?>
+    <script src="js/carrito.js"></script>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -25,9 +28,6 @@ require_once 'fragmentos.php';
                 <img src="img/logo.png" alt="Logo El Legado">
                 <h3 class="contacto-title-form">¿TIENES ALGUNA DUDA?</h3>
                 <form id="contactoForm" class="form-contacto" action="#">
-                    <input type="text" id="nombreConsulta" name="nombre" placeholder="Nombre" required>
-                    <input type="text" id="apellidoConsulta" name="apellidos" placeholder="Apellido" required>
-                    <input type="email" id="emailConsulta" name="email" placeholder="Email" required>
                     <textarea id="mensajeConsulta" name="mensaje" placeholder="Mensaje"></textarea>
                     <button type="submit" class="btn btn-primary mt-2" id="enviarConsulta">ENVIAR</button>
                 </form>
@@ -51,5 +51,42 @@ require_once 'fragmentos.php';
     <hr>
     <?php incluir_footer(); ?>
 </body>
+<script>
+    $(document).ready(function () {
+    $('#contactoForm').on('submit', function (e) {
+        e.preventDefault();
+
+        const mensaje = $('#mensajeConsulta').val();
+      
+        if (!mensaje) {
+            Swal.fire("Error", "Por favor completá todos los campos.", "warning");
+            return;
+        }
+
+        console.log(mensaje);
+        $.post('./data/accionesConsultas.php', {
+            action: 'agregarConsulta',
+            mensaje: mensaje
+        }, function (data) {
+            let respuesta = {};
+            try {
+                respuesta = JSON.parse(data);
+            } catch (e) {
+                Swal.fire("Error", "Respuesta no válida del servidor.", "error");
+                return;
+            }
+
+            if (respuesta.success) {
+                Swal.fire("¡Consulta enviada!", respuesta.success, "success");
+                $('#contactoForm')[0].reset();
+            } else if (respuesta.error) {
+                Swal.fire("Error", respuesta.error, "error");
+            }
+        }).fail(function () {
+            Swal.fire("Error", "Error de conexión con el servidor.", "error");
+        });
+    });
+});
+</script>
 
 </html>

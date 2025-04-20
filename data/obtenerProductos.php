@@ -10,7 +10,7 @@ header('Content-Type: application/json');
 
 try {
     // Preparar la llamada al procedimiento almacenado
-    $sql = "BEGIN SP_OBTENER_PRODUCTOS_ACTIVOS(:cursor); END;";
+    $sql = "BEGIN PKG_LEGADO.SP_GET_PRODUCTOS_ACTIVOS(:cursor); END;";
     $stmt = oci_parse($conn, $sql);
     if (!$stmt) {
         $error = oci_error($conn);

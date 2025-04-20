@@ -10,10 +10,11 @@ $db_password = 'admin'; // Contraseña del usuario
 $connection_string = "//$db_host:$db_port/$db_service_name";
 
 // Intenta conectar
-$conn = oci_connect($db_user, $db_password, $connection_string);
+$conn = oci_connect($db_user, $db_password, $connection_string, 'UTF8');
 
 if (!$conn) {
     $error = oci_error();
     die("Error al conectar a Oracle: " . $error['message']);
 } 
+
 ?>

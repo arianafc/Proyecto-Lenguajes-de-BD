@@ -176,3 +176,72 @@ body{
     font-size: 24px;
     cursor: pointer;
 }
+
+.user-dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.user-icon {
+    font-size: 1.5rem;
+    color: #00211A;
+    cursor: pointer;
+}
+
+.user-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 2.5rem;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-width: 160px;
+    z-index: 1000;
+}
+
+.user-dropdown-menu a {
+    display: block;
+    padding: 10px 15px;
+    color: #00211A;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.user-dropdown-menu a:hover {
+    background-color: #f2f2f2;
+}
+
+
+.iconos {
+    color: #002603;
+}
+
+.carrito-nav-container {
+    position: relative;
+    text-decoration: none;
+  }
+  
+  .carrito-icono-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .icono-carrito {
+    font-size: 24px;
+    color: #00211A;
+  }
+  
+  .carrito-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-weight: bold;
+  }
+  

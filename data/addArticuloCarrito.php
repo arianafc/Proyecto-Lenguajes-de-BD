@@ -10,8 +10,50 @@ if (!isset($_POST['action'])) {
 
 $id = $_SESSION['id'];
 $action = $_POST['action'];
+$carrito = $_SESSION['id_carrito'];
 
 switch ($action) {
+    case 'getCarrito':
+        if (!isset($_SESSION['id_carrito'])) {
+    
+            die(json_encode(["error" => "El usuario no tiene un carrito activo."]));
+        } else {
+            $idCarrito = $_SESSION['id_carrito'];
+        
+            $sql = "BEGIN PKG_CARRITO.SP_GET_CARRITO_USUARIO(:cursor, :id); END;";
+            $stmt = oci_parse($conn, $sql);
+        
+            $cursor = oci_new_cursor($conn);
+        
+        
+            oci_bind_by_name($stmt, ":cursor", $cursor, -1, OCI_B_CURSOR);
+            oci_bind_by_name($stmt, ":id", $idCarrito, -1, SQLT_INT);
+        
+            if (!oci_execute($stmt)) {
+                $error = oci_error($stmt);
+                die(json_encode(["error" => "Error al ejecutar procedimiento", "detalle" => $error['message']]));
+            }
+        
+        
+            if (!oci_execute($cursor)) {
+                $error = oci_error($cursor);
+                die(json_encode(["error" => "Error al ejecutar cursor", "detalle" => $error['message']]));
+            }
+        
+            $carrito = [];
+            while ($row = oci_fetch_assoc($cursor)) {
+                $carrito[] = $row;
+            }
+        
+            echo json_encode($carrito);
+        
+            oci_free_statement($stmt);
+            oci_free_statement($cursor);
+            oci_close($conn);
+        }
+        
+        break;
+
     case 'add':
         if (!isset($_POST['idProducto'], $_POST['cantidad'])) {
             echo json_encode(["error" => "Datos incompletos"]);
@@ -64,7 +106,7 @@ switch ($action) {
         $sql = "BEGIN PKG_CARRITO.SP_ELIMINAR_ARTICULO_CARRITO (:idProducto); END;";
         $stmt = oci_parse($conn, $sql);
 
-       
+
         oci_bind_by_name($stmt, ":idProducto", $idProducto, -1, SQLT_INT);
 
         if (!oci_execute($stmt)) {
@@ -96,7 +138,7 @@ switch ($action) {
         $sql = "BEGIN PKG_CARRITO.SP_EDITAR_ARTICULO_CARRITO (:idArticulo, :cantidad); END;";
         $stmt = oci_parse($conn, $sql);
 
-       
+
         oci_bind_by_name($stmt, ":idArticulo", $idArticulo, -1, SQLT_INT);
         oci_bind_by_name($stmt, ":cantidad", $cantidad, -1, SQLT_INT);
 
@@ -113,35 +155,84 @@ switch ($action) {
         echo json_encode(["success" => "Artículo editado correctamente"]);
         break;
 
-        case 'checkout':
+    case 'checkout':
 
-            if (!isset($_SESSION['id'])) {
-                echo json_encode(["error" => "Usuario no autenticado"]);
-                exit;
-            }
+        if (!isset($_SESSION['id'])) {
+            echo json_encode(["error" => "Usuario no autenticado"]);
+            exit;
+        }
 
-            $sql = "BEGIN PKG_CHECKOUT.SP_EJECUTAR_CHECKOUT(:carrito, :idUsuario); END;";
-            $stmt = oci_parse($conn, $sql);
-
-    
-            oci_bind_by_name($stmt, ":carrito", $carrito, -1, SQLT_INT);
-            oci_bind_by_name($stmt, ":idUsuario", $id, -1, SQLT_INT);
-
-            if (!oci_execute($stmt)) {
-                $error = oci_error($stmt);
-                echo json_encode(["error" => "Error al ejecutar procedimiento", "detalle" => $error['message']]);
-                exit;
-            }
-    
-            oci_free_statement($stmt);
-            oci_close($conn);
-    
-            echo json_encode(["success" => "Tu pago se ha realizado exitosamente. Nuestro equipo te dará updates del estado de tu pedido."]);
-
-            break;
+        $metodo = $_POST['metodo'];
+        $sql = "BEGIN PKG_CHECKOUT.SP_EJECUTAR_CHECKOUT(:carrito, :idUsuario, :metodoPago); END;";
+        $stmt = oci_parse($conn, $sql);
 
 
+        oci_bind_by_name($stmt, ":carrito", $carrito, -1, SQLT_INT);
+        oci_bind_by_name($stmt, ":idUsuario", $id, -1, SQLT_INT);
+        oci_bind_by_name($stmt, ":metodoPago", $metodo);
+        if (!oci_execute($stmt)) {
+            $error = oci_error($stmt);
+            echo json_encode(["error" => "Error al ejecutar procedimiento", "detalle" => $error['message']]);
+            exit;
+        }
 
+        oci_free_statement($stmt);
+        oci_close($conn);
+
+        echo json_encode(["success" => "Tu pago se ha realizado exitosamente. Nuestro equipo te dará updates del estado de tu pedido."]);
+
+        break;
+
+    case 'contarCarrito':
+        if (!isset($_SESSION['id'])) {
+            echo json_encode(["success" => false, "error" => "Usuario no autenticado"]);
+            exit;
+        }
+
+        $carrito_id = $_SESSION['id_carrito'];
+        $total = 0;
+
+        $stid = oci_parse($conn, "BEGIN :resultado := PKG_CARRITO.FN_CONTAR_ARTICULOS_CARRITO(:id_carrito); END;");
+        oci_bind_by_name($stid, ":resultado", $total, 10);
+        oci_bind_by_name($stid, ":id_carrito", $carrito_id);
+
+        if (oci_execute($stid)) {
+            header('Content-Type: application/json');
+            echo json_encode(["success" => true, "total" => $total]);
+        } else {
+            $e = oci_error($stid);
+            echo json_encode(["success" => false, "error" => $e['message']]);
+        }
+        exit;
+
+
+    case 'totalCarrito':
+        if (!isset($_SESSION['id_carrito'])) {
+            echo json_encode(["error" => "Carrito no identificado"]);
+            exit;
+        }
+
+        $idCarrito = $_SESSION['id_carrito'];
+
+        $sql = "BEGIN :subtotal := PKG_LEGADO.FN_OBTENER_SUBTOTAL_CARRITO(:idCarrito); END;";
+        $stmt = oci_parse($conn, $sql);
+
+        $subtotal = 0;
+
+        oci_bind_by_name($stmt, ":idCarrito", $idCarrito, -1, SQLT_INT);
+        oci_bind_by_name($stmt, ":subtotal", $subtotal, -1, SQLT_NUMBER);
+
+
+        if (!oci_execute($stmt)) {
+            $error = oci_error($stmt);
+            echo json_encode(["error" => "Error al obtener subtotal", "detalle" => $error['message']]);
+            exit;
+        }
+
+        echo json_encode(["subtotal" => number_format($subtotal, 2)]);
+        oci_free_statement($stmt);
+        oci_close($conn);
+        break;
 
     default:
         echo json_encode(["error" => "Acción no válida"]);

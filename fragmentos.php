@@ -33,15 +33,15 @@ function incluir_navbar()
             <span class="location-icon">📍</span>
             <span>Cartago, Costa Rica</span>
         </div>
-<?php
+        <?php
         if (!isset($_SESSION['id'])) {
-        // Si el usuario no está logueado
-        echo '<div class="auth-links"><a href="login.php">Sign In / Sign Up</a></div>';
+            // Si el usuario no está logueado
+            echo '<div class="auth-links"><a href="login.php">Sign In / Sign Up</a></div>';
         } else {
-        // Si el usuario está logueado
-        echo '<div class="auth-links"><a href="logout.php">Bienvenido, '.$_SESSION['nombre'].'</a></div>';
+            // Si el usuario está logueado
+            echo '<div class="auth-links"><a href="logout.php">Bienvenido, ' . $_SESSION['nombre'] . '</a></div>';
         }
-?>
+        ?>
     </div>
     </div>
     </div>
@@ -56,12 +56,23 @@ function incluir_navbar()
         </div>
 
         <?php if (isset($_SESSION['id'])): ?>
-    <div class="navbar-right">
-        <a href="carrito.php" class="cart-container">
-            <div class="cart-icon">🛒</div>
-        </a>
-    </div>
-<?php endif; ?>
+            <div class="navbar-right">
+                <!-- HTML del ícono del carrito -->
+                <a href="carrito.php" class="carrito-nav-container">
+                    <div class="carrito-icono-wrapper">
+                        <i class="icono-carrito fas fa-shopping-cart"></i>
+                        <span class="carrito-badge" id="contadorCarrito"></span>
+                    </div>
+                </a>
+
+
+                <a href="perfil.php" class="cart-container">
+                    <div class="iconos cart-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </a>
+            </div>
+        <?php endif; ?>
 
     </div>
 

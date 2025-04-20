@@ -44,26 +44,24 @@ require_once 'fragmentos.php';
             </div>
             <div class="perfil text-center col-md-8">
                 <img src="img/logo.png" alt="Logo El Legado">
-                <h3 class="contacto-title-form">TUS PEDIDOS</h3>
+                <h3 class="contacto-title-form">TUS CONSULTAS</h3>
                 <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th># Pedido</th>
-                                    <th>Fecha</th>
-                                    <th>Método de Pago</th>
+                                    <th>Tipo</th>
+                                    <th>Mensaje</th>
                                     <th>Estado</th>
-                                    <th>Total</th>
-                                    <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaPedidosUsuario">
+                            <tbody id="tablaConsultasUsuario">
                             </tbody>
                         </table>
             </div>
         </section>
 
 
+    
 
 
 
@@ -72,43 +70,55 @@ require_once 'fragmentos.php';
     <hr>
     <?php incluir_footer(); ?>
 </body>
+
 <script>
-     $(document).on('click', '.btnVerDetallePedido', function () {
-        console.log('hola');
-        const idPedido = $(this).data('id');
-        $.post('./data/accionesPerfil.php', { action: 'verDetallePedido', idPedido: idPedido }, function (response) {
-            let detalles = [];
-            
+$(document).ready(function () {
+    obtenerConsultasUsuario();
+
+    function obtenerConsultasUsuario() {
+        $.post('./data/accionesConsultas.php', {
+            action: 'obtenerConsultasUsuario'
+        }, function (data) {
+            let respuesta;
             try {
-                detalles = JSON.parse(response);
+                respuesta = JSON.parse(data);
             } catch (e) {
-                alert("Error al procesar respuesta del servidor");
+                Swal.fire("Error", "Respuesta inválida del servidor.", "error");
                 return;
             }
-  
-            if (detalles.error) {
-                alert(detalles.error);
+
+            const tabla = $('#tablaConsultasUsuario');
+            tabla.empty();
+
+            if (respuesta.error) {
+                Swal.fire("Error", respuesta.error, "error");
                 return;
             }
-            console.log(detalles);
-            $('#tablaDetallesPedidos').empty();
-  
-            detalles.forEach(det => {
-                const fila = `
+
+            if (respuesta.mensaje) {
+                tabla.append(`
                     <tr>
-                        <td>${det.PRODUCTO}</td>
-                        <td>${det.CANTIDAD}</td>
-                        <td>$${det.PRECIO}</td>
-                        <td>$${parseFloat(det.SUBTOTAL).toFixed(2)}</td>
+                        <td colspan="3" class="text-center">${respuesta.mensaje}</td>
                     </tr>
-                `;
-                $('#tablaDetallesPedidos').append(fila);
+                `);
+                return;
+            }
+
+            respuesta.forEach(consulta => {
+                tabla.append(`
+                    <tr>
+                        <td>${consulta.TIPO}</td>
+                        <td>${consulta.MENSAJE}</td>
+                        <td>${consulta.ESTADO}</td>
+                    </tr>
+                `);
             });
-    
-        
-            $('#tablaDetallesPedidos').closest('table').show();
+        }).fail(function () {
+            Swal.fire("Error", "Error al conectar con el servidor.", "error");
         });
-    });
+    }
+});
 
 </script>
+
 </html>
