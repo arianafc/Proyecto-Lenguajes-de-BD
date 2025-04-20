@@ -23,7 +23,7 @@ switch ($action) {
     
         try {
             // Llamar SP_AGREGAR_USUARIO
-            $stmt = oci_parse($conn, "BEGIN SP_AGREGAR_USUARIO(
+            $stmt = oci_parse($conn, "BEGIN PKG_LEGADO.SP_AGREGAR_USUARIO(
                 :p_nombre, :p_email, :p_estado, :p_apellido1, :p_apellido2, 
                 :p_username, :p_contrasena, :p_rol, :p_id_usuario); END;");
     
@@ -44,7 +44,7 @@ switch ($action) {
             }
     
             // Llamar SP CREAR_CARRITO para ese nuevo usuario
-            $stmtCarrito = oci_parse($conn, "BEGIN CREAR_CARRITO(:p_id_usuario); END;");
+            $stmtCarrito = oci_parse($conn, "BEGIN PKG_LEGADO.SP_CREAR_CARRITO(:p_id_usuario); END;");
             oci_bind_by_name($stmtCarrito, ':p_id_usuario', $id_usuario);
             if (!oci_execute($stmtCarrito)) {
                 $e = oci_error($stmtCarrito);
@@ -78,7 +78,7 @@ switch ($action) {
             $id_rol = (int)$_POST['id_rol'];
     
             try {
-                $stmt = oci_parse($conn, "BEGIN SP_EDITAR_USUARIO(
+                $stmt = oci_parse($conn, "BEGIN PKG_LEGADO.SP_EDITAR_USUARIO(
                     :p_id_usuario, :p_nombre, :p_apellido1, :p_apellido2,
                     :p_email, :p_estado, :p_username, :p_contrasena, :p_rol
                 ); END;");
@@ -112,7 +112,7 @@ switch ($action) {
             $nuevo_estado = (int)$_POST['nuevo_estado'];
         
             try {
-                $stmt = oci_parse($conn, "BEGIN SP_CAMBIAR_ESTADO_USUARIO(:p_id_usuario, :p_nuevo_estado); END;");
+                $stmt = oci_parse($conn, "BEGIN PKG_LEGADO.SP_CAMBIAR_ESTADO_USUARIO(:p_id_usuario, :p_nuevo_estado); END;");
                 oci_bind_by_name($stmt, ':p_id_usuario', $id_usuario);
                 oci_bind_by_name($stmt, ':p_nuevo_estado', $nuevo_estado);
         

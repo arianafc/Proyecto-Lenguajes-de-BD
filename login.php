@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             // Consulta a la vista por medio de un SP para obtener la información del usuario
-            $sql = "BEGIN SP_VERIFICAR_USUARIO(:username, :id_usuario, :id_rol, :rol_descripcion, :email, :contrasena_bd, :nombre, :id_carrito, :estado_usuario); END;";
+            $sql = "BEGIN PKG_LEGADO.SP_VERIFICAR_USUARIO(:username, :id_usuario, :id_rol, :rol_descripcion, :email, :contrasena_bd, :nombre, :id_carrito, :estado_usuario); END;";
             
             $stmt = oci_parse($conn, $sql);
             oci_bind_by_name($stmt, ':username', $username);
@@ -129,7 +129,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="createAccount">¿Olvidaste tu usuario?<a href="recuperarUsuario.php"> Recuperar Usuario</a></label>
                 <hr>
             </div>
-          
+            <div class="createAccount text-center">
+            <label for="createAccount">¿Olvidaste tu contraseña?<a href="recuperarPassword.php"> Actualizar Contraseña</a></label>
+                <hr>
+            </div>
             <hr>
 
             <button type="submit">Ingresar</button>
