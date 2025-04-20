@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-    <div class="login-container">
+    <div class="registro-container">
 
         <img src="/LenguajesBD-Proyecto/Proyecto-Lenguajes-de-BD/img/familia.png" alt="Logo el Legado">
 
@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" class="btn btn-warning fw-bold text-white">Crear cuenta</button>
                 <hr>
                 <button type="button" class="btn btn-outline-warning fw-bold"
-                    onclick="window.location.href='/LenguajesBD-Proyecto/Proyecto-Lenguajes-de-BD/login.php'">
+                    onclick="window.location.href='login.php'">
                     Volver al inicio de sesión
                 </button>
             </div>
