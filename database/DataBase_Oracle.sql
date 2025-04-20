@@ -321,6 +321,10 @@ BEGIN
     SELECT COUNT(*) INTO V_COUNT_EMAIL 
     FROM USUARIOS 
     WHERE UPPER(EMAIL) = UPPER(P_EMAIL);
+
+    IF NOT REGEXP_LIKE(P_CONTRASENA, '^[A-Za-z0-9]{10,}$') THEN
+        RAISE_APPLICATION_ERROR(-20003, 'La contraseña debe tener al menos 10 caracteres e incluir letras y números.');
+    END IF;
     
     IF V_COUNT_EMAIL > 0 THEN
         RAISE_APPLICATION_ERROR(-20001, 'El correo electrónico ya está registrado con otro usuario.');
@@ -346,7 +350,7 @@ BEGIN
 EXCEPTION
     WHEN OTHERS THEN
         ROLLBACK;
-        IF SQLCODE = -20001 OR SQLCODE = -20002 THEN
+        IF SQLCODE = -20001 OR SQLCODE = -20002 OR SQLCODE = -20003 THEN
             RAISE;
         ELSE
             RAISE_APPLICATION_ERROR(-20004, 'ERROR AL AGREGAR USUARIO: ' || SQLERRM);
