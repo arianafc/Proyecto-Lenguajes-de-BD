@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    value="<?php echo isset($username) ? htmlspecialchars($username) : ''; ?>">
 
             <input type="password" name="contraseña" placeholder="Contraseña" required>
-
+<hr>
             <div class="createAccount text-center">
                 <label for="createAccount">¿No tienes cuenta?<a href="registro.php"> Registrarme</a></label>                
             </div>
