@@ -166,7 +166,6 @@ function sidebar()
 
         <hr>
         <div class="opciones">
-            <a href="dashboard.php" id="dashboard">Dashboard</a>
             <a href="gestionUsuarios.php" id="gestionUsuarios">Gestión de Usuarios</a>
             <a href="gestionPedidos.php" id="gestionPedidos">Gestión de Pedidos</a>
             <a href="gestionProductos.php" id="gestionProductos">Gestión de Productos</a>
