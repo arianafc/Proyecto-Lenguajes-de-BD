@@ -81,7 +81,7 @@ $(document).ready(function () {
         }, function (data) {
             let respuesta;
             try {
-                respuesta = JSON.parse(data);
+                respuesta = data;
             } catch (e) {
                 Swal.fire("Error", "Respuesta inválida del servidor.", "error");
                 return;

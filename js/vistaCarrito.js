@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <tr>
                         <td>${producto.NOMBRE}</td>
                         <td>
-                            <input type="number" class="form-control cantidad-input" 
+                            <input id="cantidadArticulo" type="number" class="form-control cantidad-input" 
                                    value="${producto.CANTIDAD}" 
                                    data-id="${producto.ID_ARTICULO}" min="1">
                         </td>
