@@ -409,7 +409,7 @@ $productos = listarProductos($conn);
                     confirmButtonText: 'Guardar cambios',
                     didOpen: () => {
                         // Cargar categorías
-                        $.post('data/accionesProducto.php', { action: 'obtenerCategorias' }, function (categorias) {
+                        $.post('data/accionesCategorias.php', { action: 'obtenerCategorias' }, function (categorias) {
                             const select = document.getElementById('swal-categoria');
                             categorias.forEach(cat => {
                                 const option = document.createElement('option');

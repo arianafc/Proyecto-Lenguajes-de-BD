@@ -38,9 +38,9 @@ document.addEventListener("DOMContentLoaded", function () {
     
         productos.slice(0, 4).forEach(producto => {
             let card = document.createElement("div");
-            card.classList.add("products-grid");
+            card.classList.add("products-grid", "p-2");
             card.innerHTML = `
-                <div class="product-card">
+                <div class="product-card ">
                     <h3 class="product-title">${producto.NOMBRE}</h3>
                     <p class="product-description">${producto.DESCRIPCION}</p>
                     <p class="product-price">₡${producto.PRECIO}</p>
@@ -87,16 +87,18 @@ document.addEventListener("DOMContentLoaded", function () {
             }
     
             productos.forEach(producto => {
-                let card = `
-                    <div class="product-card">
-                        <h3 class="product-title">${producto.NOMBRE}</h3>
-                        <p class="product-description">${producto.DESCRIPCION}</p>
-                        <p class="product-price">₡${producto.PRECIO}</p>
-                        <button class="btn bg-light">
-                            <a href="vistaDetalleProducto.php?id=${producto.ID_PRODUCTO}">Ver producto</a>
-                        </button>
-                    </div>
-                `;
+                let card = document.createElement("div");
+            card.classList.add("products-grid", "p-2");
+            card.innerHTML = `
+                <div class="product-card">
+                    <h3 class="product-title">${producto.NOMBRE}</h3>
+                    <p class="product-description">${producto.DESCRIPCION}</p>
+                    <p class="product-price">₡${producto.PRECIO}</p>
+                   <button class="btn bg-light">
+    <a href="vistaDetalleProducto.php?id=${producto.ID_PRODUCTO}">Ver producto</a>
+</button>
+                </div>
+            `;
                 contenedor.append(card);
             });
         });

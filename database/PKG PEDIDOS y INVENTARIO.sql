@@ -1,11 +1,6 @@
 CREATE OR REPLACE PACKAGE PKG_LEGADO AS
 
-    -- Cursor para pedidos válidos
-    CURSOR CURSOR_PEDIDOS IS
-        SELECT ID_PEDIDO, FECHA, ID_USUARIO, ID_ESTADO, SUBTOTAL, TOTAL
-        FROM PEDIDOS
-        WHERE ID_ESTADO IN (1, 3, 4, 5, 7, 8)
-        ORDER BY ID_ESTADO;
+
 
     -- Procedimientos de gestión de pedidos
     PROCEDURE ACTUALIZAR_ESTADO_PEDIDO(

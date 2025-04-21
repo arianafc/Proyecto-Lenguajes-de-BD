@@ -38,13 +38,14 @@ require_once 'fragmentos.php';
                     <h1 class="tituloHP">HECHO POR TICOS, <br>PARA TICOS</h1>
                     <span>Producto 100% artesanal</span>
                     <br><br>
-                    <span><a href="" class="fw-bold text-dark">¿Quienes Somos?</a></span>
+                    <span><a href="nosotros.php" class="fw-bold text-dark">¿Quienes Somos?</a></span>
                 </div>
             </div>
         <br>
             <h1 class="productosHP text-center">NUESTROS PRODUCTOS</h3>
                 <section class="products-section">
-                    <div class="container" id="contenedor-productosIndex">
+                <div id="contenedor-productosIndex" class="d-flex flex-wrap gap-3 justify-content-center"></div>
+
                        
                 </section>
         </section>

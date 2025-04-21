@@ -26,7 +26,7 @@ require_once 'fragmentos.php';
     <main>
         <section class="contact-section row">
             <div class="perfil text-center col-md-4">
-                <img src="img/logo.png" alt="Logo El Legado">
+                <img src="img/logo.png" alt="Logo El Legado" style="width: 200px;">
                 <h3 class="contacto-title-form">MI PERFIL</h3>
                     <p>Hola,   <?php echo $_SESSION['nombre']; ?></p>
                     <p><strong>Correo Electrónico:</strong> <?php echo $_SESSION['correo']; ?></p>
@@ -43,7 +43,7 @@ require_once 'fragmentos.php';
 
             </div>
             <div class="perfil text-center col-md-8">
-                <img src="img/logo.png" alt="Logo El Legado">
+                <img src="img/logo.png" alt="Logo El Legado" style="width: 200px;">
                 <h3 class="contacto-title-form">TUS PEDIDOS</h3>
                 <div class="table-responsive">
                         <table class="table table-striped table-hover">

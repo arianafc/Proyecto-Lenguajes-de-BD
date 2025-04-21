@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="registro-container">
 
-        <img src="/LenguajesBD-Proyecto/Proyecto-Lenguajes-de-BD/img/familia.png" alt="Logo el Legado">
+        <img src="img\logo.png" style="width: 200px;" alt="Logo el Legado">
 
         <h2>Crear cuenta<br>El legado</h2>
 

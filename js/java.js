@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
         productos.forEach(producto => {
             let card = document.createElement("div");
-            card.classList.add("products-grid");
+            card.classList.add("products-grid", "p-2");
             card.innerHTML = `
                 <div class="product-card">
                     <h3 class="product-title">${producto.NOMBRE}</h3>

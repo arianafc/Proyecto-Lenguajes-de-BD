@@ -50,7 +50,7 @@ if ($idProducto > 0) {
             <br>
             <div class="mainContainer container-fluid row">
                 <div class="col">
-                    <img class="object-fit-lg-contain border rounded imagenHP p-5" src='<?= $producto[0]['IMAGEN'] ?>'>
+                    <img class="object-fit-lg-contain border rounded imagenHP p-5" style="height: 700px;" src='<?= $producto[0]['IMAGEN'] ?>'>
                 </div>
                 <div class="col align-self-center p-5">
                     <div id="container-producto">

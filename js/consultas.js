@@ -39,7 +39,7 @@ function cargarConsultas() {
             let acciones = '';
             if (parseInt(c.ID_ESTADO) === 4) {
                 acciones += `
-                    <button class="btn btn-sm btn-warning btnCambiarEstado" data-id="${c.ID_CONSULTA}" data-accion="3">En revisión</button>
+                    <button class="btn btn-sm btn-warning btnCambiarEstado" data-id="${c.ID_CONSULTA}" data-accion="2">En revisión</button>
                     <button class="btn btn-sm btn-primary btnCambiarEstado" data-id="${c.ID_CONSULTA}" data-accion="1">Contestada</button>
                 `;
             } else if (parseInt(c.ID_ESTADO) === 3) {
