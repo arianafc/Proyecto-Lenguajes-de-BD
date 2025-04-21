@@ -18,9 +18,8 @@
 </head>
 <body>
     <div class="login-container">
-        <img src="\LenguajesBD-Proyecto\Proyecto-Lenguajes-de-BD\img\familia.png" alt="Logo el Legado">
+        <img src="img\logo.png" style="width: 200px;" alt="Logo el Legado">
         <h2>Cambiar Contraseña<br>El legado</h2>
-
         <form method="POST" id="formCambiarContrasena">
             <div class="mb-3">
                 <input type="text" name="username" class="form-control" id="usernameCambio" placeholder="Nombre de Usuario" required>
