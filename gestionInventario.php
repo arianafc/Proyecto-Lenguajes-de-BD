@@ -3,7 +3,6 @@ session_start();
 require_once 'fragmentos.php';
 require_once 'conexion.php';
 
-// Actualizar estado del inventario
 if (isset($_POST['btn_estado'])) {
     $id = $_POST['id_inventario'];
     $nuevo_estado = $_POST['nuevo_estado'];
@@ -13,16 +12,16 @@ if (isset($_POST['btn_estado'])) {
     oci_bind_by_name($stmtUpdate, ":estado", $nuevo_estado);
 
     if (oci_execute($stmtUpdate)) {
-        header("Location: gestionInventario.php");
-        exit();
+        $_SESSION['mensaje_estado'] = 'exito';
     } else {
-        $e = oci_error($stmtUpdate);
-        echo "<div class='alert alert-danger'>Error: " . htmlentities($e['message'], ENT_QUOTES) . "</div>";
+        $_SESSION['mensaje_estado'] = 'error';
+        $_SESSION['detalle_error_estado'] = htmlentities(oci_error($stmtUpdate)['message'], ENT_QUOTES);
     }
     oci_free_statement($stmtUpdate);
+    header("Location: gestionInventario.php");
+    exit();
 }
 
-// Insertar producto al inventario
 if (isset($_POST['btn_insertar'])) {
     $nombre_producto = $_POST['nombre_producto'];
     $cantidad_producto = $_POST['cantidad_producto'];
@@ -45,7 +44,6 @@ if (isset($_POST['btn_insertar'])) {
     exit();
 }
 
-// Actualizar cantidad del inventario
 if (isset($_POST['btn_actualizar_cantidad'])) {
     $id_inventario = $_POST['id_inventario'];
     $nueva_cantidad = $_POST['nueva_cantidad'];
@@ -55,12 +53,14 @@ if (isset($_POST['btn_actualizar_cantidad'])) {
     oci_bind_by_name($stmtUpdateCantidad, ":cantidad", $nueva_cantidad);
 
     if (oci_execute($stmtUpdateCantidad)) {
-        echo "<div class='alert alert-success'>Cantidad actualizada correctamente</div>";
+        $_SESSION['mensaje_cantidad'] = 'exito';
     } else {
-        $e = oci_error($stmtUpdateCantidad);
-        echo "<div class='alert alert-danger'>Error: " . htmlentities($e['message'], ENT_QUOTES) . "</div>";
+        $_SESSION['mensaje_cantidad'] = 'error';
+        $_SESSION['detalle_error_cantidad'] = htmlentities(oci_error($stmtUpdateCantidad)['message'], ENT_QUOTES);
     }
     oci_free_statement($stmtUpdateCantidad);
+    header("Location: gestionInventario.php");
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -93,7 +93,6 @@ if (isset($_POST['btn_actualizar_cantidad'])) {
                 </div>
             </div>
 
-            <!-- Formulario para insertar producto -->
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">Agregar Nuevo Producto</h5>
@@ -118,7 +117,6 @@ if (isset($_POST['btn_actualizar_cantidad'])) {
                 </div>
             </div>
 
-            <!-- Tabla de inventario -->
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">Lista de Inventario</h5>
@@ -128,10 +126,10 @@ if (isset($_POST['btn_actualizar_cantidad'])) {
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
-                                <th>Cantidad</th>
+                                <th>Cantidad</th> <!-- Ahora editable directamente -->
                                 <th>Estado</th>
                                 <th>Advertencia</th>
-                                <th>Acción</th>
+                                <th>Acciones</th> <!-- Solo cambiar estado -->
                             </tr>
                         </thead>
                         <tbody>
@@ -151,10 +149,15 @@ if (oci_execute($stmt)) {
         echo "<tr>";
         echo "<td>" . htmlspecialchars($id) . "</td>";
         echo "<td>" . htmlspecialchars($row['NOMBRE']) . "</td>";
-        echo "<td>" . htmlspecialchars($cantidad) . "</td>";
+        echo "<td>
+                <form method='POST' class='d-flex gap-2 align-items-center'>
+                    <input type='hidden' name='id_inventario' value='$id'>
+                    <input type='number' name='nueva_cantidad' value='$cantidad' min='0' class='form-control form-control-sm' style='width: 80px;' required>
+                    <button type='submit' name='btn_actualizar_cantidad' class='btn btn-warning btn-sm'>Actualizar</button>
+                </form>
+            </td>";
         echo "<td>" . htmlspecialchars($estado) . "</td>";
 
-        // Advertencias por cantidad
         if ($cantidad == 0) {
             $advertencia = "<span class='text-danger fw-bold'>URGENTE: Comprar</span>";
         } elseif ($cantidad <= 5) {
@@ -167,21 +170,13 @@ if (oci_execute($stmt)) {
 
         echo "<td>$advertencia</td>";
 
-        echo "<td>";
-        if ($estado == 'ACTIVO') {
-            echo "<form method='POST' style='display:inline-block;'>
+        echo "<td>
+                <form method='POST'>
                     <input type='hidden' name='id_inventario' value='$id'>
-                    <input type='hidden' name='nuevo_estado' value='2'>
-                    <button type='submit' class='btn btn-danger btn-sm' name='btn_estado'>Desactivar</button>
-                </form>";
-        } else {
-            echo "<form method='POST' style='display:inline-block;'>
-                    <input type='hidden' name='id_inventario' value='$id'>
-                    <input type='hidden' name='nuevo_estado' value='1'>
-                    <button type='submit' class='btn btn-success btn-sm' name='btn_estado'>Activar</button>
-                </form>";
-        }
-        echo "</td>";
+                    <input type='hidden' name='nuevo_estado' value='" . ($estado == 'ACTIVO' ? "2" : "1") . "'>
+                    <button type='submit' class='btn btn-sm " . ($estado == 'ACTIVO' ? "btn-danger" : "btn-success") . "' name='btn_estado'>" . ($estado == 'ACTIVO' ? "Desactivar" : "Activar") . "</button>
+                </form>
+            </td>";
         echo "</tr>";
     }
 } else {
@@ -200,7 +195,6 @@ oci_free_cursor($cursor);
     </div>
 </div>
 
-<!-- Dropdown toggle -->
 <script>
     function toggleDropdown() {
         document.getElementById("dropdownMenu").classList.toggle("active");
@@ -212,21 +206,40 @@ oci_free_cursor($cursor);
     });
 </script>
 
-<!-- SweetAlert después de insertar -->
 <?php if (isset($_SESSION['mensaje'])): ?>
 <script>
-    Swal.fire({
-        icon: '<?php echo $_SESSION['mensaje'] === "exito" ? "success" : "error"; ?>',
-        title: '<?php echo $_SESSION["mensaje"] === "exito" ? "Producto agregado" : "Error al insertar"; ?>',
-        text: '<?php echo $_SESSION["mensaje"] === "exito" ? "El producto fue agregado exitosamente." : $_SESSION["detalle_error"]; ?>',
-        timer: 3000,
-        showConfirmButton: false
-    });
+Swal.fire({
+    icon: '<?php echo $_SESSION['mensaje'] === "exito" ? "success" : "error"; ?>',
+    title: '<?php echo $_SESSION["mensaje"] === "exito" ? "Producto agregado" : "Error al insertar"; ?>',
+    text: '<?php echo $_SESSION["mensaje"] === "exito" ? "El producto fue agregado exitosamente." : $_SESSION["detalle_error"]; ?>',
+    timer: 3000,
+    showConfirmButton: false
+});
 </script>
-<?php
-    unset($_SESSION['mensaje']);
-    unset($_SESSION['detalle_error']);
-endif;
-?>
+<?php unset($_SESSION['mensaje'], $_SESSION['detalle_error']); endif; ?>
+
+<?php if (isset($_SESSION['mensaje_cantidad'])): ?>
+<script>
+Swal.fire({
+    icon: '<?php echo $_SESSION['mensaje_cantidad'] === "exito" ? "success" : "error"; ?>',
+    title: '<?php echo $_SESSION["mensaje_cantidad"] === "exito" ? "Cantidad actualizada" : "Error al actualizar"; ?>',
+    text: '<?php echo $_SESSION["mensaje_cantidad"] === "exito" ? "Se actualizó correctamente la cantidad." : $_SESSION["detalle_error_cantidad"]; ?>',
+    timer: 3000,
+    showConfirmButton: false
+});
+</script>
+<?php unset($_SESSION['mensaje_cantidad'], $_SESSION['detalle_error_cantidad']); endif; ?>
+
+<?php if (isset($_SESSION['mensaje_estado'])): ?>
+<script>
+Swal.fire({
+    icon: '<?php echo $_SESSION['mensaje_estado'] === "exito" ? "success" : "error"; ?>',
+    title: '<?php echo $_SESSION["mensaje_estado"] === "exito" ? "Estado actualizado" : "Error al actualizar estado"; ?>',
+    text: '<?php echo $_SESSION["mensaje_estado"] === "exito" ? "El estado del producto fue modificado." : $_SESSION["detalle_error_estado"]; ?>',
+    timer: 3000,
+    showConfirmButton: false
+});
+</script>
+<?php unset($_SESSION['mensaje_estado'], $_SESSION['detalle_error_estado']); endif; ?>
 </body>
 </html>
