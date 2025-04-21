@@ -7,7 +7,7 @@ if (isset($_POST['btn_estado'])) {
     $id = $_POST['id_inventario'];
     $nuevo_estado = $_POST['nuevo_estado'];
 
-    $stmtUpdate = oci_parse($conn, "BEGIN PKG_LEGADO.ACTUALIZAR_ESTADO_INVENTARIO(:id, :estado); END;");
+    $stmtUpdate = oci_parse($conn, "BEGIN PKG_LEGADO.SP_ACTUALIZAR_ESTADO_INVENTARIO(:id, :estado); END;");
     oci_bind_by_name($stmtUpdate, ":id", $id);
     oci_bind_by_name($stmtUpdate, ":estado", $nuevo_estado);
 
@@ -27,7 +27,7 @@ if (isset($_POST['btn_insertar'])) {
     $cantidad_producto = $_POST['cantidad_producto'];
     $estado_producto = $_POST['estado_producto'];
 
-    $stmtInsert = oci_parse($conn, "BEGIN PKG_LEGADO.INSERTAR_PRODUCTO_INVENTARIO(:nombre, :cantidad, :estado); END;");
+    $stmtInsert = oci_parse($conn, "BEGIN PKG_LEGADO.SP_INSERTAR_PRODUCTO_INVENTARIO(:nombre, :cantidad, :estado); END;");
     oci_bind_by_name($stmtInsert, ":nombre", $nombre_producto);
     oci_bind_by_name($stmtInsert, ":cantidad", $cantidad_producto);
     oci_bind_by_name($stmtInsert, ":estado", $estado_producto);
@@ -48,7 +48,7 @@ if (isset($_POST['btn_actualizar_cantidad'])) {
     $id_inventario = $_POST['id_inventario'];
     $nueva_cantidad = $_POST['nueva_cantidad'];
 
-    $stmtUpdateCantidad = oci_parse($conn, "BEGIN PKG_LEGADO.ACTUALIZAR_CANTIDAD_INVENTARIO(:id_inventario, :cantidad); END;");
+    $stmtUpdateCantidad = oci_parse($conn, "BEGIN PKG_LEGADO.SP_ACTUALIZAR_CANTIDAD_INVENTARIO(:id_inventario, :cantidad); END;");
     oci_bind_by_name($stmtUpdateCantidad, ":id_inventario", $id_inventario);
     oci_bind_by_name($stmtUpdateCantidad, ":cantidad", $nueva_cantidad);
 
@@ -134,7 +134,7 @@ if (isset($_POST['btn_actualizar_cantidad'])) {
                         </thead>
                         <tbody>
 <?php
-$query = "BEGIN PKG_LEGADO.OBTENER_INVENTARIO(:cursor_inv); END;";
+$query = "BEGIN PKG_LEGADO.SP_OBTENER_INVENTARIO(:cursor_inv); END;";
 $stmt = oci_parse($conn, $query);
 $cursor = oci_new_cursor($conn);
 oci_bind_by_name($stmt, ':cursor_inv', $cursor, -1, OCI_B_CURSOR);
