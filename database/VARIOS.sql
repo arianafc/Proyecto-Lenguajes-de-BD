@@ -750,17 +750,13 @@ BEGIN
     SELECT COUNT(*) INTO V_COUNT_EMAIL 
     FROM USUARIOS 
     WHERE UPPER(EMAIL) = UPPER(P_EMAIL);
-<<<<<<< Updated upstream
 
     IF LENGTH(P_CONTRASENA) < 10 OR
     NOT REGEXP_LIKE(P_CONTRASENA, '[A-Z]') OR
     NOT REGEXP_LIKE(P_CONTRASENA, '[a-z]') OR
     NOT REGEXP_LIKE(P_CONTRASENA, '[0-9]') THEN
     RAISE_APPLICATION_ERROR(-20003, 'La contraseña debe tener al menos 10 caracteres, una mayúscula, una minúscula y un número.');
-=======
-    IF NOT REGEXP_LIKE(P_CONTRASENA, '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$') THEN
-        RAISE_APPLICATION_ERROR(-20003, 'La contraseña debe tener al menos 10 caracteres e incluir letras y números.');
->>>>>>> Stashed changes
+
     END IF;
 
     

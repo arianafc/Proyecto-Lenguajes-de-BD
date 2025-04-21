@@ -57,6 +57,8 @@ require_once 'fragmentos.php';
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="js/java.js"></script>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <?php incluir_css() ?>
 </head>
 <body>
@@ -89,6 +91,7 @@ require_once 'fragmentos.php';
                                     <th>Subtotal</th>
                                     <th>Total</th>
                                     <th>Acciones</th>
+                                    <th>Detalle</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -148,6 +151,7 @@ if (oci_execute($stmt)) {
             }
         }
         echo "</td>";
+        echo "<td><button class='btn btn-primary btn-sm btn-ver-detalle' data-id='{$row['ID_PEDIDO']}'>Ver detalle</button></td>";
         echo "</tr>";
     }
 } else {
@@ -177,6 +181,62 @@ oci_free_cursor($cursor);
             document.getElementById("dropdownMenu").classList.remove("active");
         }
     });
+
+
+
+    $(document).on('click', '.btn-ver-detalle', function () {
+    const idPedido = $(this).data('id');
+
+    $.post('./data/accionesPerfil.php', { action: 'verDetallePedido', idPedido: idPedido }, function (respuesta) {
+        if (respuesta.error) {
+            Swal.fire('Error', respuesta.error, 'error');
+            return;
+        }
+
+        if (respuesta.length === 0) {
+            Swal.fire('Sin detalles', 'Este pedido no tiene productos registrados.', 'info');
+            return;
+        }
+
+        let html = `
+            <table class="table table-bordered text-start" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        respuesta.forEach(detalle => {
+            html += `
+                <tr>
+                    <td>${detalle.PRODUCTO}</td>
+                    <td>${detalle.CANTIDAD}</td>
+                    <td>₡${parseFloat(detalle.PRECIO).toLocaleString('es-CR')}</td>
+                    <td>₡${parseFloat(detalle.SUBTOTAL).toLocaleString('es-CR')}</td>
+                </tr>
+            `;
+        });
+
+        html += '</tbody></table>';
+
+        Swal.fire({
+            title: 'Detalle del Pedido #' + idPedido,
+            html: html,
+            width: '60%',
+            confirmButtonText: 'Cerrar'
+        });
+
+    }, 'json').fail(function (xhr, status, error) {
+        console.error(error);
+        Swal.fire('Error', 'No se pudo obtener la información del pedido.', 'error');
+    });
+});
+
 </script>
 </body>
 </html>

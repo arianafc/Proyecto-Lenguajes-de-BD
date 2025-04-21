@@ -312,9 +312,9 @@ $roles = obtenerRoles($conn);
                     <input id="swal-apellido2" class="swal2-input" placeholder="Apellido 2" value="${usuario.apellido2}">
                     <input id="swal-email" class="swal2-input" placeholder="Email" value="${usuario.email}">
                     <input id="swal-username" class="swal2-input" placeholder="Username" value="${usuario.username}">
-                    <input id="swal-contrasena" type="password" class="swal2-input" placeholder="Contraseña" value="${usuario.contrasena}">
+                    <input id="swal-contrasena" type="hidden" class="swal2-input" placeholder="Contraseña" value="${usuario.contrasena}">
 
-                    <select id="swal-id_estado" class="swal2-input">
+                    <select  id="swal-id_estado" class="swal2-input d-none">
                     <option value="1" ${usuario.id_estado == 1 ? 'selected' : ''}>Activo</option>
                     <option value="2" ${usuario.id_estado == 2 ? 'selected' : ''}>Inactivo</option>
                     </select>
