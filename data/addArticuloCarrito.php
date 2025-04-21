@@ -227,7 +227,8 @@ switch ($action) {
         $subtotal = 0;
 
         oci_bind_by_name($stmt, ":idCarrito", $idCarrito, -1, SQLT_INT);
-        oci_bind_by_name($stmt, ":subtotal", $subtotal, -1, SQLT_NUMBER);
+        oci_bind_by_name($stmt, ":subtotal", $subtotal, -1, OCI_B_INT);
+
 
 
         if (!oci_execute($stmt)) {

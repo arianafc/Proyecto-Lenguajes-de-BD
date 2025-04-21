@@ -19,9 +19,9 @@ require_once 'fragmentos.php';
     <?php incluir_css(); ?>
     <script src="js/vistaCarrito.js"></script>
     <script src="js/carrito.js"></script>
- 
+
     <script src="js/java.js"></script>
-  
+
 </head>
 
 <body>
@@ -43,9 +43,9 @@ require_once 'fragmentos.php';
                             <th>Acción</th>
                         </tr>
                     </thead>
-                   <tbody>
+                    <tbody>
 
-                   </tbody>
+                    </tbody>
                 </table>
 
                 <div class="cart-total">
@@ -59,14 +59,129 @@ require_once 'fragmentos.php';
                 </div>
             </div>
 
-          
+
         </section>
     </main>
     <hr>
     <?php incluir_footer(); ?>
 </body>
 <script>
-   $(document).on('click', '#checkoutBtn', function () {
+    $(document).on('click', '#checkoutBtn', function () {
+        Swal.fire({
+            title: "TU COMPRA",
+            html: `
+            <p>Revisa tu pedido antes de finalizar.</p>
+            <label for="paymentMethod">Método de Pago:</label>
+            <div id="paymentOptions">
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                    <input type="radio" name="paymentMethod" value="1" data-descripcion="sinpe">
+                    Sinpe
+                </label>
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                    <input type="radio" name="paymentMethod" value="2" data-descripcion="efectivo">
+                    Efectivo
+                </label>
+            </div>
+            <div id="paymentDetails" style="margin-top: 10px;"></div>
+            <div class="cart-summary" style="margin-top: 10px;">
+                <p class="total">Total: <strong id="totalAmount"></strong></p>
+            </div>
+        `,
+            showCancelButton: true,
+            confirmButtonText: "Pagar Ahora",
+            cancelButtonText: "Cancelar",
+            customClass: {
+                confirmButton: "bntPagar",
+                cancelButton: "btnCancelar"
+            },
+            didOpen: () => {
+                $.post('./data/addArticuloCarrito.php', { action: 'totalCarrito' }, function (data) {
+                    if (data.subtotal) {
+                        $('#totalAmount').text(`${data.subtotal} CRC`);
+                    } else {
+                        $('#totalAmount').text("0 CRC");
+                    }
+                }, 'json');
+
+                const paymentButton = document.querySelector('.bntPagar');
+                paymentButton.disabled = true;
+
+                $('input[name="paymentMethod"]').on('change', function () {
+                    const metodo = $(this).data('descripcion');
+                    const container = $('#paymentDetails');
+                    container.empty();
+                    paymentButton.disabled = false;
+
+                    if (metodo === 'SINPE') {
+                        container.html(`
+                        <p><strong>Por favor envía el comprobante de pago al número <span style="color:#007bff;">+506 78686790</span>.</strong></p>
+                        <p>De lo contrario, no se procesará el pedido.</p>
+                    `);
+                    } else if (metodo === 'Efectivo') {
+                        container.html(`
+                        <p><strong>Por favor realiza el pago a nuestro mensajero el día de la entrega de tu pedido.</strong></p>
+                    `);
+                    }
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const metodoSeleccionado = document.querySelector('input[name="paymentMethod"]:checked');
+
+                if (metodoSeleccionado) {
+                    const idMetodoPago = metodoSeleccionado.value;
+                    const descripcion = metodoSeleccionado.dataset.descripcion;
+                    let mensaje = "";
+
+                    if (descripcion === "SINPE") {
+                        mensaje = "Pago por SINPE. El cliente debe enviar el comprobante al número +506 78686790.";
+                    } else if (descripcion === "Efectivo") {
+                        mensaje = "Pago en efectivo. El cliente pagará al mensajero el día de la entrega.";
+                    }
+
+                    $.post('./data/addArticuloCarrito.php', {
+                        action: 'checkout',
+                        idMetodoPago: idMetodoPago,
+                        metodo: descripcion
+                    }, function (data) {
+                        let respuesta = {};
+                        try {
+                            respuesta = JSON.parse(data);
+                        } catch (e) {
+                            Swal.fire("Error", "No se pudo procesar la respuesta del servidor.", "error");
+                            return;
+                        }
+
+                        if (respuesta.success) {
+                            Swal.fire({
+                                title: "Procesando Pago...",
+                                text: "Gracias por tu compra.",
+                                showConfirmButton: false,
+                                timer: 3000
+                            }).then(() => {
+                                Swal.fire({
+                                    title: "¡Pago Exitoso!",
+                                    text: "Encontrarás la información de tu pedido en Mi Perfil.",
+                                    icon: "success",
+                                    confirmButtonText: "Aceptar",
+                                    timer: 3000
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            });
+                        } else {
+                            Swal.fire("Error", respuesta.message || "No se pudo completar el pago.", "error");
+                        }
+                    }).fail(function () {
+                        Swal.fire("Error", "Error de conexión con el servidor.", "error");
+                    });
+                } else {
+                    Swal.fire("Advertencia", "Por favor selecciona un método de pago.", "warning");
+                }
+            }
+        });
+    });
+    $(document).on('click', '#checkoutBtn', function () {
     Swal.fire({
         title: "TU COMPRA",
         html: `
@@ -95,30 +210,18 @@ require_once 'fragmentos.php';
             cancelButton: "btnCancelar"
         },
         didOpen: () => {
+            // Obtener el total
             $.post('./data/addArticuloCarrito.php', { action: 'totalCarrito' }, function (data) {
-                $('#totalAmount').text(`${parseFloat(data).toFixed(2)} CRC`);
-            });
-
-            const paymentButton = document.querySelector('.bntPagar');
-            paymentButton.disabled = true;
-
-            $('input[name="paymentMethod"]').on('change', function () {
-                const metodo = $(this).data('descripcion');
-                const container = $('#paymentDetails');
-                container.empty();
-                paymentButton.disabled = false;
-
-                if (metodo === 'SINPE') {
-                    container.html(`
-                        <p><strong>Por favor envía el comprobante de pago al número <span style="color:#007bff;">+506 78686790</span>.</strong></p>
-                        <p>De lo contrario, no se procesará el pedido.</p>
-                    `);
-                } else if (metodo === 'Efectivo') {
-                    container.html(`
-                        <p><strong>Por favor realiza el pago a nuestro mensajero el día de la entrega de tu pedido.</strong></p>
-                    `);
+                if (data.subtotal) {
+                    $('#totalAmount').text(`${data.subtotal} CRC`);
+                } else {
+                    $('#totalAmount').text("0 CRC");
                 }
-            });
+            }, 'json');
+
+            // Deshabilitar botón de pago inicialmente
+            const paymentButton = Swal.getConfirmButton();
+            paymentButton.disabled = true;
         }
     }).then((result) => {
         if (result.isConfirmed) {
@@ -129,7 +232,7 @@ require_once 'fragmentos.php';
                 const descripcion = metodoSeleccionado.dataset.descripcion;
                 let mensaje = "";
 
-                if (descripcion === "SINPE") {
+                if (descripcion === "sinpe") {
                     mensaje = "Pago por SINPE. El cliente debe enviar el comprobante al número +506 78686790.";
                 } else if (descripcion === "efectivo") {
                     mensaje = "Pago en efectivo. El cliente pagará al mensajero el día de la entrega.";
@@ -178,6 +281,28 @@ require_once 'fragmentos.php';
     });
 });
 
+// Escuchar cambios en los radios del método de pago
+$(document).on('change', 'input[name="paymentMethod"]', function () {
+    const metodo = $(this).data('descripcion');
+    const container = $('#paymentDetails');
+    container.empty();
+
+    const paymentButton = Swal.getConfirmButton();
+    paymentButton.disabled = false;
+
+    if (metodo === 'sinpe') {
+        container.html(`
+            <p><strong>Por favor envía el comprobante de pago al número <span style="color:#007bff;">+506 78686790</span>.</strong></p>
+            <p>De lo contrario, no se procesará el pedido.</p>
+        `);
+    } else if (metodo === 'efectivo') {
+        container.html(`
+            <p><strong>Por favor realiza el pago a nuestro mensajero el día de la entrega de tu pedido.</strong></p>
+        `);
+    }
+});
+
 
 </script>
+
 </html>

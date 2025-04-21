@@ -338,6 +338,29 @@ switch ($action) {
                             oci_close($conn);
                             break;
 
+                            case 'cancelarPedido':
+                                try {
+                                    $idPedido = $_POST['idPedido'];
+                            
+                                    $stmt = oci_parse($conn, "BEGIN PKG_LEGADO.SP_ACTUALIZAR_ESTADO_PEDIDO(:p_id_pedido, :p_id_estado); END;");
+                                    oci_bind_by_name($stmt, ':p_id_pedido', $idPedido);
+                                    $estadoCancelado = 8;
+                                    oci_bind_by_name($stmt, ':p_id_estado', $estadoCancelado);
+                            
+                                    if (oci_execute($stmt)) {
+                                        echo json_encode(['success' => true]);
+                                    } else {
+                                        $e = oci_error($stmt);
+                                        echo json_encode(['success' => false, 'message' => $e['message']]);
+                                    }
+                            
+                                    oci_free_statement($stmt);
+                                } catch (Exception $e) {
+                                    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+                                }
+                                break;
+                            
+
     default:
         echo json_encode(["error" => "Acción no válida"]);
         break;

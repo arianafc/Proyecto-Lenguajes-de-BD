@@ -638,10 +638,12 @@ PROCEDURE SP_CAMBIAR_CONTRASENA (
     V_ERROR VARCHAR2(4000);
 BEGIN
     -- Validar formato de la contraseña
-    IF NOT REGEXP_LIKE(P_NUEVA_CONTRASENA, '^[A-Za-z0-9]{10,}$') THEN
-        RAISE_APPLICATION_ERROR(-20003, 'La contraseña debe tener al menos 10 caracteres alfanuméricos.');
+     IF LENGTH(P_NUEVA_CONTRASENA) < 10 OR
+    NOT REGEXP_LIKE(P_NUEVA_CONTRASENA, '[A-Z]') OR
+    NOT REGEXP_LIKE(P_NUEVA_CONTRASENA, '[a-z]') OR
+    NOT REGEXP_LIKE(P_NUEVA_CONTRASENA, '[0-9]') THEN
+    RAISE_APPLICATION_ERROR(-20003, 'La contraseña debe tener al menos 10 caracteres, una mayúscula, una minúscula y un número.');
     END IF;
-
     -- Verifica si el usuario existe
     SELECT COUNT(*) INTO V_CONTAR FROM USUARIOS WHERE USERNAME = P_USERNAME;
 
