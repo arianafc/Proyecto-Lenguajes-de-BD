@@ -33,7 +33,7 @@ require_once 'fragmentos.php';
             </div>
 
             <div class="cart-items">
-                <table class="table">
+                <table class="table" id="tablaCarrito">
                     <thead>
                         <tr>
                             <th>Producto</th>
@@ -43,7 +43,7 @@ require_once 'fragmentos.php';
                             <th>Acción</th>
                         </tr>
                     </thead>
-                   <tbody id="tablaCarrito">
+                   <tbody>
 
                    </tbody>
                 </table>
