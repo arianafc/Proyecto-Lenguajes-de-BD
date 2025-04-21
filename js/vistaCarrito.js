@@ -1,9 +1,6 @@
-
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
-
+ 
+    getCarrito();
     function getCarrito() {
         $.post('./data/addArticuloCarrito.php', { action: 'getCarrito' }, function (data) {
             if (data.error) {
@@ -146,6 +143,5 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
     
- 
-    getCarrito();
+
 });

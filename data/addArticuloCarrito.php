@@ -19,9 +19,6 @@ $carrito = $_SESSION['id_carrito'];
 $action = $_POST['action'];
 
 switch ($action) {
-    
-
-
     case 'getCarrito':
         if (!isset($_SESSION['id'])) {
             echo json_encode(["error" => "Necesitas iniciar sesión para ver tu carrito."]);

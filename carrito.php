@@ -17,8 +17,9 @@ require_once 'fragmentos.php';
     <script src="./js/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <?php incluir_css(); ?>
-    <script src="js/carrito.js"></script>
     <script src="js/vistaCarrito.js"></script>
+    <script src="js/carrito.js"></script>
+ 
     <script src="js/java.js"></script>
   
 </head>
@@ -32,7 +33,7 @@ require_once 'fragmentos.php';
             </div>
 
             <div class="cart-items">
-                <table class="table">
+                <table class="table" id="tablaCarrito">
                     <thead>
                         <tr>
                             <th>Producto</th>
@@ -42,7 +43,7 @@ require_once 'fragmentos.php';
                             <th>Acción</th>
                         </tr>
                     </thead>
-                   <tbody id="tablaCarrito">
+                   <tbody>
 
                    </tbody>
                 </table>
