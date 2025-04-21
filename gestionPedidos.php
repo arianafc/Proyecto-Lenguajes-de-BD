@@ -6,7 +6,7 @@ if (isset($_POST['btn_cancelar'])) {
     $idCancelar = $_POST['id_cancelar'];
     $nuevo_estado = 8; // CANCELADO
 
-    $stmtCancel = oci_parse($conn, "BEGIN PKG_LEGADO.ACTUALIZAR_ESTADO_PEDIDO(:id_pedido, :nuevo_estado); END;");
+    $stmtCancel = oci_parse($conn, "BEGIN PKG_LEGADO.SP_ACTUALIZAR_ESTADO_PEDIDO(:id_pedido, :nuevo_estado); END;");
     oci_bind_by_name($stmtCancel, ":id_pedido", $idCancelar);
     oci_bind_by_name($stmtCancel, ":nuevo_estado", $nuevo_estado);
 
@@ -26,7 +26,7 @@ if (isset($_POST['btn_estado'])) {
     $id = $_POST['id_pedido'];
     $nuevo_estado = $_POST['nuevo_estado'];
 
-    $stmtUpdate = oci_parse($conn, "BEGIN PKG_LEGADO.ACTUALIZAR_ESTADO_PEDIDO(:id, :nuevo_estado); END;");
+    $stmtUpdate = oci_parse($conn, "BEGIN PKG_LEGADO.SP_ACTUALIZAR_ESTADO_PEDIDO(:id, :nuevo_estado); END;");
     oci_bind_by_name($stmtUpdate, ":id", $id);
     oci_bind_by_name($stmtUpdate, ":nuevo_estado", $nuevo_estado);
 
@@ -107,7 +107,7 @@ $colores_estado = [
     'CANCELADO' => 'danger'
 ];
 
-$query = "BEGIN PKG_LEGADO.OBTENER_PEDIDOS(:cursor_pedidos); END;";
+$query = "BEGIN PKG_LEGADO.SP_OBTENER_PEDIDOS(:cursor_pedidos); END;";
 $stmt = oci_parse($conn, $query);
 $cursor = oci_new_cursor($conn);
 oci_bind_by_name($stmt, ':cursor_pedidos', $cursor, -1, OCI_B_CURSOR);
