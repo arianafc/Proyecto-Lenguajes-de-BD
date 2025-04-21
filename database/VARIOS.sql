@@ -645,9 +645,13 @@ BEGIN
     FROM USUARIOS 
     WHERE UPPER(EMAIL) = UPPER(P_EMAIL);
 
-    IF NOT REGEXP_LIKE(P_CONTRASENA, '^[A-Za-z0-9]{10,}$') THEN
-        RAISE_APPLICATION_ERROR(-20003, 'La contraseña debe tener al menos 10 caracteres e incluir letras y números.');
+    IF LENGTH(P_CONTRASENA) < 10 OR
+    NOT REGEXP_LIKE(P_CONTRASENA, '[A-Z]') OR
+    NOT REGEXP_LIKE(P_CONTRASENA, '[a-z]') OR
+    NOT REGEXP_LIKE(P_CONTRASENA, '[0-9]') THEN
+    RAISE_APPLICATION_ERROR(-20003, 'La contraseña debe tener al menos 10 caracteres, una mayúscula, una minúscula y un número.');
     END IF;
+
     
     IF V_COUNT_EMAIL > 0 THEN
         RAISE_APPLICATION_ERROR(-20001, 'El correo electrónico ya está registrado con otro usuario.');
