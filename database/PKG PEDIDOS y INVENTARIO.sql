@@ -1,26 +1,46 @@
 CREATE OR REPLACE PACKAGE PKG_LEGADO AS
+
+    -- Cursor para pedidos válidos
     CURSOR CURSOR_PEDIDOS IS
         SELECT ID_PEDIDO, FECHA, ID_USUARIO, ID_ESTADO, SUBTOTAL, TOTAL
         FROM PEDIDOS
         WHERE ID_ESTADO IN (1, 3, 4, 5, 7, 8)
         ORDER BY ID_ESTADO;
 
+    -- Procedimientos de gestión de pedidos
     PROCEDURE ACTUALIZAR_ESTADO_PEDIDO(
         P_ID_PEDIDO    NUMBER,
         P_ID_ESTADO    NUMBER
     );
 
-    PROCEDURE OBTENER_PEDIDOS(P_CURSOR OUT SYS_REFCURSOR);
+    PROCEDURE OBTENER_PEDIDOS(
+        P_CURSOR OUT SYS_REFCURSOR
+    );
 
-    -- NUEVOS PROCEDIMIENTOS PARA INVENTARIO
-    PROCEDURE OBTENER_INVENTARIO(P_CURSOR OUT SYS_REFCURSOR);
+    -- Procedimientos de gestión de inventario
+    PROCEDURE OBTENER_INVENTARIO(
+        P_CURSOR OUT SYS_REFCURSOR
+    );
 
     PROCEDURE ACTUALIZAR_ESTADO_INVENTARIO(
-        P_ID_INVENTARIO NUMBER,
-        P_ID_ESTADO     NUMBER
+        P_ID_INVENTARIO IN NUMBER,
+        P_ID_ESTADO     IN NUMBER
     );
+
+    PROCEDURE INSERTAR_PRODUCTO_INVENTARIO(
+        v_nombre    IN VARCHAR2,
+        v_cantidad  IN NUMBER,
+        v_estado    IN NUMBER
+    );
+
+    PROCEDURE ACTUALIZAR_CANTIDAD_INVENTARIO(
+        P_ID_INVENTARIO IN NUMBER,
+        P_CANTIDAD      IN NUMBER
+    );
+
 END PKG_LEGADO;
 /
+
 
 ------------------
 
@@ -78,7 +98,31 @@ CREATE OR REPLACE PACKAGE BODY PKG_LEGADO AS
         SET ID_ESTADO = P_ID_ESTADO
         WHERE ID_INVENTARIO = P_ID_INVENTARIO;
     END;
+    
+    PROCEDURE INSERTAR_PRODUCTO_INVENTARIO (
+        v_nombre IN VARCHAR2,
+        v_cantidad IN NUMBER,
+        v_estado IN NUMBER
+    ) IS
+    BEGIN
+        INSERT INTO INVENTARIO (
+            ID_INVENTARIO, NOMBRE, CANTIDAD, ID_ESTADO
+        ) VALUES (
+            SEQ_INVENTARIO.NEXTVAL, v_nombre, v_cantidad, v_estado
+        );
+    END;
+
+
+    -- NUEVO: Actualizar cantidad del producto en el inventario
+    PROCEDURE ACTUALIZAR_CANTIDAD_INVENTARIO(
+        P_ID_INVENTARIO   IN NUMBER,
+        P_CANTIDAD        IN NUMBER
+    ) IS
+    BEGIN
+        UPDATE INVENTARIO
+        SET CANTIDAD = P_CANTIDAD
+        WHERE ID_INVENTARIO = P_ID_INVENTARIO;
+    END;
 
 END PKG_LEGADO;
 /
-
