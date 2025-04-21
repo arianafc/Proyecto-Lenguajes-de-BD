@@ -425,33 +425,33 @@ END SP_CAMBIAR_ESTADO_USUARIO;
 
 -- SP para verificar el usuario cuando hace login
 CREATE OR REPLACE PROCEDURE SP_VERIFICAR_USUARIO(
-    p_username IN VARCHAR2,
-    p_id_usuario OUT NUMBER,
-    p_id_rol OUT NUMBER,
-    p_rol_descripcion OUT VARCHAR2,
-    p_email OUT VARCHAR2,
-    p_contrasena OUT VARCHAR2,
-    p_nombre OUT VARCHAR2,
-    p_id_carrito OUT NUMBER,
-    p_estado_usuario   OUT NUMBER
+    P_USERNAME IN VARCHAR2,
+    P_ID_USUARIO OUT NUMBER,
+    P_ID_ROL OUT NUMBER,
+    P_ROL_DESCRIPCION OUT VARCHAR2,
+    P_EMAIL OUT VARCHAR2,
+    P_CONTRASENA OUT VARCHAR2,
+    P_NOMBRE OUT VARCHAR2,
+    P_ID_CARRITO OUT NUMBER,
+    P_ESTADO_USUARIO OUT NUMBER
 )
 AS
 BEGIN
     SELECT ID_USUARIO, ID_ROL, ROL_DESCRIPCION, EMAIL, CONTRASENA, NOMBRE, ID_CARRITO, ID_ESTADO
-    INTO p_id_usuario, p_id_rol, p_rol_descripcion, p_email, p_contrasena, p_nombre, p_id_carrito, p_estado_usuario
+    INTO P_ID_USUARIO, P_ID_ROL, P_ROL_DESCRIPCION, P_EMAIL, P_CONTRASENA, P_NOMBRE, P_ID_CARRITO, P_ESTADO_USUARIO
     FROM V_USUARIOS_ROLES 
-    WHERE USERNAME = p_username;
-    
+    WHERE USERNAME = P_USERNAME;
+
 EXCEPTION
     WHEN NO_DATA_FOUND THEN
-        p_id_usuario := NULL;
-        p_id_rol := NULL;
-        p_rol_descripcion := NULL;
-        p_email := NULL;
-        p_contrasena := NULL;
-        p_nombre := NULL;
-        p_id_carrito := NULL;
-        p_estado_usuario := NULL;
+        P_ID_USUARIO := NULL;
+        P_ID_ROL := NULL;
+        P_ROL_DESCRIPCION := NULL;
+        P_EMAIL := NULL;
+        P_CONTRASENA := NULL;
+        P_NOMBRE := NULL;
+        P_ID_CARRITO := NULL;
+        P_ESTADO_USUARIO := NULL;
     WHEN OTHERS THEN
         RAISE;
 END SP_VERIFICAR_USUARIO;
